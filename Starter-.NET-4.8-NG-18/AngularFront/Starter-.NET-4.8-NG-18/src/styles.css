@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+
+.center { width: 70%; margin: auto; }
+.center-full { width: 100%; margin: auto; }
+.flex { display: flex; justify-content: space-between; }
+.flex-col { display: flex; justify-content: space-between; flex-direction: column; }
+
+.pointer{cursor: pointer;}
+.relative{position: relative;}
+.absolute{position: absolute;}
+
+tr:nth-child(even){ background-color: #eee; }
+tbody>tr:hover{ background-color: #caf2f0;  }
+
+h1, h2, h3 {text-align: center;}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

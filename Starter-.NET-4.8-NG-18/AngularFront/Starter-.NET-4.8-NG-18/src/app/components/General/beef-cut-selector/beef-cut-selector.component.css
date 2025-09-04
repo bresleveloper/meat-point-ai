@@ -1,0 +1,288 @@
+.beef-cut-selector-container {
+  background: white;
+  border: 2px solid #DEB887;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+}
+
+.selector-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #DEB887;
+}
+
+.selector-header h3 {
+  color: #8B4513;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.selector-header p {
+  color: #5D4E37;
+  margin: 0;
+  font-style: italic;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #DEB887;
+  background: white;
+  color: #8B4513;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: #FFF8DC;
+  border-color: #8B4513;
+}
+
+.filter-btn.active {
+  background: #8B4513;
+  color: white;
+  border-color: #8B4513;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  color: #5D4E37;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #DEB887;
+  border-top: 3px solid #8B4513;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cut-card {
+  border: 2px solid #DEB887;
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.cut-card:hover {
+  border-color: #8B4513;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+  transform: translateY(-2px);
+}
+
+.cut-card.selected {
+  border-color: #8B4513;
+  background: #FFF8DC;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+}
+
+.cut-image-placeholder {
+  text-align: center;
+  background: linear-gradient(135deg, #F5DEB3, #DEB887);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.cut-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.cut-location {
+  color: #8B4513;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cut-info {
+  padding: 0;
+}
+
+.cut-name {
+  color: #8B4513;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cut-characteristics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.characteristic {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.characteristic .label {
+  font-size: 0.85rem;
+  color: #5D4E37;
+  font-weight: 500;
+}
+
+.characteristic .value {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.tenderness-badge {
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.complexity-stars {
+  color: #DAA520;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.cooking-methods {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #DEB887;
+}
+
+.methods-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #5D4E37;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.methods-list {
+  font-size: 0.85rem;
+  color: #8B4513;
+}
+
+.method-tag {
+  font-weight: 500;
+}
+
+.cut-description {
+  font-size: 0.85rem;
+  color: #5D4E37;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.selection-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: #228B22;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.selected-cut-details {
+  background: #FFF8DC;
+  border: 2px solid #DAA520;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.selected-cut-details h4 {
+  color: #8B4513;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.tips-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.cooking-tips, .temperature-guide {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #8B4513;
+}
+
+.cooking-tips strong, .temperature-guide strong {
+  color: #8B4513;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.cooking-tips p, .temperature-guide p {
+  color: #5D4E37;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .cuts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cut-characteristics {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .filter-btn {
+    width: 200px;
+  }
+  
+  .tips-content {
+    grid-template-columns: 1fr;
+  }
+}

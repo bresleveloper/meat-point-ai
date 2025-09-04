@@ -1,0 +1,113 @@
+<div class="beef-cut-selector-container">
+  <div class="selector-header">
+    <h3>🥩 Choose Your Beef Cut</h3>
+    <p>Learn about different cuts and their cooking characteristics</p>
+  </div>
+
+  <div class="filter-controls">
+    <button 
+      class="filter-btn"
+      [class.active]="filterBy === 'all'"
+      (click)="filterCuts('all')"
+    >
+      All Cuts
+    </button>
+    <button 
+      class="filter-btn"
+      [class.active]="filterBy === 'tenderness'"
+      (click)="filterCuts('tenderness')"
+    >
+      By Tenderness
+    </button>
+    <button 
+      class="filter-btn"
+      [class.active]="filterBy === 'complexity'"
+      (click)="filterCuts('complexity')"
+    >
+      By Difficulty
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading beef cuts...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="cuts-grid">
+    <div 
+      *ngFor="let cut of filteredCuts"
+      class="cut-card"
+      [class.selected]="selectedCut?.BeefCutID === cut.BeefCutID"
+      (click)="selectCut(cut)"
+    >
+      <div class="cut-image-placeholder">
+        <!-- Placeholder for beef cut image -->
+        <div class="cut-icon">🥩</div>
+        <div class="cut-location">{{ cut.CowBodyLocation }}</div>
+      </div>
+
+      <div class="cut-info">
+        <h4 class="cut-name">{{ cut.Name }}</h4>
+        
+        <div class="cut-characteristics">
+          <div class="characteristic">
+            <span class="label">Tenderness:</span>
+            <span 
+              class="value tenderness-badge"
+              [style.background-color]="getTendernessColor(cut.Tenderness)"
+            >
+              {{ cut.Tenderness }}
+            </span>
+          </div>
+
+          <div class="characteristic">
+            <span class="label">Difficulty:</span>
+            <span class="value complexity-stars">
+              <span *ngFor="let star of getComplexityStars(cut.ComplexityLevel)">{{ star }}</span>
+            </span>
+          </div>
+
+
+          <div class="characteristic">
+            <span class="label">Marbling:</span>
+            <span class="value">{{ cut.MarblingLevel }}</span>
+          </div>
+        </div>
+
+        <div class="cooking-methods">
+          <span class="methods-label">Best for:</span>
+          <div class="methods-list">
+            <span 
+              *ngFor="let method of cut.BestCookingMethods.split(','); let last = last"
+              class="method-tag"
+            >
+              {{ method.trim() }}{{ !last ? ',' : '' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="cut-description">
+          {{ cut.Description }}
+        </div>
+      </div>
+
+      <div class="selection-indicator" *ngIf="selectedCut?.BeefCutID === cut.BeefCutID">
+        ✓ Selected
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedCut" class="selected-cut-details">
+    <h4>🔥 Cooking Tips for {{ selectedCut.Name }}</h4>
+    <div class="tips-content">
+      <div class="cooking-tips">
+        <strong>Cooking Tips:</strong>
+        <p>{{ selectedCut.CookingTips }}</p>
+      </div>
+      <div class="temperature-guide">
+        <strong>Temperature Guidelines:</strong>
+        <p>{{ selectedCut.TemperatureGuidelines }}</p>
+      </div>
+    </div>
+  </div>
+</div>

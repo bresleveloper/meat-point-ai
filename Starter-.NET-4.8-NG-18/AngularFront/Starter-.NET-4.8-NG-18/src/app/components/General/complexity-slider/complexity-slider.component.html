@@ -1,0 +1,64 @@
+<div class="complexity-slider-container">
+  <div class="slider-header">
+    <h3>Cooking Skill Level</h3>
+    <div class="current-level">
+      <span class="level-label">{{ getCurrentLevel().label }}</span>
+      <span class="level-description">{{ getCurrentLevel().description }}</span>
+    </div>
+  </div>
+
+  <div class="slider-wrapper">
+    <div class="slider-track">
+      <input 
+        type="range" 
+        min="1" 
+        max="5" 
+        step="1"
+        [value]="value"
+        (input)="onSliderChange($event)"
+        class="complexity-range"
+      />
+      <div class="slider-labels">
+        <div 
+          *ngFor="let level of complexityLevels" 
+          class="slider-label"
+          [class.active]="level.level === value"
+        >
+          <div class="label-icon">{{ level.label.split(' ')[0] }}</div>
+          <div class="label-text">{{ level.label.substring(level.label.indexOf(' ') + 1) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="difficulty-indicators">
+    <div class="indicator-row">
+      <span class="indicator-label">Recipe Complexity:</span>
+      <div class="difficulty-dots">
+        <div 
+          *ngFor="let i of [1,2,3,4,5]" 
+          class="dot"
+          [class.filled]="i <= value"
+        ></div>
+      </div>
+    </div>
+    
+    <div class="skill-hints">
+      <div *ngIf="value === 1" class="hint">
+        Simple seasonings, foolproof cooking methods, hard to mess up
+      </div>
+      <div *ngIf="value === 2" class="hint">
+        Basic techniques, forgiving cuts, simple flavor profiles
+      </div>
+      <div *ngIf="value === 3" class="hint">
+        Moderate techniques, timing matters, good flavor development
+      </div>
+      <div *ngIf="value === 4" class="hint">
+        Advanced skills required, precise timing, complex flavors
+      </div>
+      <div *ngIf="value === 5" class="hint">
+        Expert techniques, perfect timing, restaurant-quality results
+      </div>
+    </div>
+  </div>
+</div>

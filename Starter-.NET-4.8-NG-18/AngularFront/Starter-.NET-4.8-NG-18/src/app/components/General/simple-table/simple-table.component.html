@@ -1,0 +1,20 @@
+
+
+<div class="center flex-col">
+    <h1>{{title}}</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                @for (c of cols; track $index) { <th>{{c}}</th> }
+            </tr>
+        </thead>
+        <tbody>
+            @for (x of items; track $index) {
+                <tr>
+                    @for (c of cols; track $index) { <td>{{x[c]}}</td> }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

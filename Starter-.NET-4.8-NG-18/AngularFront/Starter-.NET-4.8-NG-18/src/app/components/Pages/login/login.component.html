@@ -1,0 +1,67 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="beef-header">
+      <h1 class="app-title">🥩 Beef Master</h1>
+      <p class="app-subtitle">Master the art of cooking beef</p>
+    </div>
+
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <h2>Sign In</h2>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          [(ngModel)]="loginData.email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          class="form-input"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="loginData.password"
+          name="password"
+          placeholder="••••••••"
+          required
+          class="form-input"
+        />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button 
+        type="submit" 
+        class="login-btn"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing In...</span>
+      </button>
+
+      <div class="register-link">
+        Don't have an account? 
+        <a (click)="goToRegister()" style="cursor: pointer;">Create one here</a>
+      </div>
+    </form>
+
+    <div class="features-preview">
+      <h3>What you'll get:</h3>
+      <ul>
+        <li>🥩 Learn about different beef cuts</li>
+        <li>👨‍🍳 Recipes from "Stupid Dad" to "Super Chef Mom" level</li>
+        <li>🤖 AI-powered recipe generation</li>
+        <li>📝 Printable grocery lists and cooking instructions</li>
+        <li>⭐ 3 free recipes daily, or 30 with Premium ($10/month)</li>
+      </ul>
+    </div>
+  </div>
+</div>
