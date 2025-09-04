@@ -1,17 +1,298 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Black & Red Theme */
+/*ari test red C42225 || 880808 */
+/*claude red DC2626*/
+/*background-image: linear-gradient(135deg, #980002, #660000);*/
 
-.center { width: 70%; margin: auto; }
-.center-full { width: 100%; margin: auto; }
-.flex { display: flex; justify-content: space-between; }
-.flex-col { display: flex; justify-content: space-between; flex-direction: column; }
+:root {
+  --primary-dark: #000000;
+  --secondary-dark: #1a1a1a;
+  --tertiary-dark: #2d2d2d;
+  --quaternary-dark: #404040;
+  --light-dark: #666666;
+  
+  --primary-red: #980002;
+  --secondary-red: #660000;
+  --tertiary-red: #F87171;
+  --light-red: #FCA5A5;
+  --red-gradient: linear-gradient(135deg, #980002, #660000);
+  --dark-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-accent: #FCA5A5;
+  
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  
+  --border-color: #404040;
+  --hover-color: #2d2d2d;
+  --focus-color: #880808;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-red: 0 4px 14px 0 rgba(220, 38, 38, 0.39);
+  
+  --transition: all 0.3s ease;
+}
 
-.pointer{cursor: pointer;}
-.relative{position: relative;}
-.absolute{position: absolute;}
+* {
+  box-sizing: border-box;
+}
 
-tr:nth-child(even){ background-color: #eee; }
-tbody>tr:hover{ background-color: #caf2f0;  }
+html, body { 
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+  background: var(--primary-dark);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+}
 
-h1, h2, h3 {text-align: center;}
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+  min-height: 100vh;
+}
+
+/* Layout Utilities */
+.center { 
+  width: min(90%, 1200px); 
+  margin: 0 auto; 
+  padding: 0 1rem;
+}
+
+.center-full { 
+  width: 100%; 
+  margin: 0 auto; 
+}
+
+.flex { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  gap: 1rem;
+}
+
+.flex-col { 
+  display: flex; 
+  justify-content: space-between; 
+  flex-direction: column; 
+  gap: 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Utility Classes */
+.pointer { cursor: pointer; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.rounded { border-radius: 8px; }
+.rounded-lg { border-radius: 12px; }
+.shadow { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.transition { transition: var(--transition); }
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 { 
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  background: var(--red-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+h3 { font-size: clamp(1.3rem, 3vw, 1.75rem); }
+h4 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+
+p {
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1.7;
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--light-red);
+  text-decoration: underline;
+}
+
+/* Form Elements */
+input, select, textarea {
+  background: var(--secondary-dark);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  transition: var(--transition);
+  width: 100%;
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 24px;
+  background: var(--red-gradient);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-red);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: var(--tertiary-dark);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-red);
+}
+
+/* Cards */
+.card {
+  background: var(--secondary-dark);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.card:hover {
+  border-color: var(--primary-red);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--secondary-dark);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+tr:nth-child(even) { 
+  background-color: var(--tertiary-dark); 
+}
+
+tbody > tr:hover { 
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+th {
+  background: var(--tertiary-dark);
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .center {
+    width: 95%;
+    padding: 0 0.5rem;
+  }
+  
+  .flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.3rem; }
+  
+  .btn {
+    padding: 14px 20px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .center {
+    width: 100%;
+    padding: 0 0.5rem;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  input, select, textarea {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
