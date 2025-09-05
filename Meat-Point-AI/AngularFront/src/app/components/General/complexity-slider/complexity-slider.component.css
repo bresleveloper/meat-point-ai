@@ -26,9 +26,12 @@
 }
 
 .current-level {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    align-items: normal;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+    margin: auto;
 }
 
 .level-label {
@@ -39,6 +42,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 0.25rem;
+  padding-right: 3rem;
 }
 
 .level-description {

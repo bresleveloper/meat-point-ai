@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, filter, take } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/user.model';
 
@@ -14,11 +14,34 @@ export class AuthService {
   
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  
+  private authInitializedSubject = new BehaviorSubject<boolean>(false);
+  public authInitialized$ = this.authInitializedSubject.asObservable();
 
   private readonly TOKEN_KEY = 'auth_token';
 
   constructor() {
-    this.checkAuthStatus();
+    this.initializeAuth();
+  }
+
+  private initializeAuth(): void {
+    console.log('🔐 AuthService: Starting initialization...');
+    const token = this.getToken();
+    console.log('🔐 AuthService: Token exists?', !!token);
+    
+    this.checkAuthStatus().subscribe({
+      next: (response) => {
+        console.log('🔐 AuthService: Auth check response:', response);
+        console.log('🔐 AuthService: User authenticated?', response.Success);
+        this.authInitializedSubject.next(true);
+      },
+      error: (error) => {
+        console.error('🔐 AuthService: Auth initialization error:', error);
+        this.clearCurrentUser();
+        this.removeToken();
+        this.authInitializedSubject.next(true);
+      }
+    });
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
@@ -57,9 +80,12 @@ export class AuthService {
       );
   }
 
-  checkAuthStatus(): Observable<AuthResponse> {
+  private checkAuthStatus(): Observable<AuthResponse> {
     const token = this.getToken();
+    console.log('🔐 AuthService: checkAuthStatus - Token:', token?.substring(0, 20) + '...');
+    
     if (!token) {
+      console.log('🔐 AuthService: No token found, clearing user');
       this.clearCurrentUser();
       return new Observable(observer => {
         observer.next({ Success: false, Message: 'No token found' });
@@ -67,12 +93,16 @@ export class AuthService {
       });
     }
 
+    console.log('🔐 AuthService: Making CheckAuth API call...');
     return this.http.get<AuthResponse>(`${this.baseUrl}/CheckAuth`, { headers: this.getAuthHeaders() })
       .pipe(
         tap(response => {
+          console.log('🔐 AuthService: CheckAuth API response:', response);
           if (response.Success && response.User) {
+            console.log('🔐 AuthService: Setting user as authenticated:', response.User.Email);
             this.setCurrentUser(response.User);
           } else {
+            console.log('🔐 AuthService: Auth failed, clearing user and token');
             this.clearCurrentUser();
             this.removeToken();
           }
@@ -81,11 +111,13 @@ export class AuthService {
   }
 
   private setCurrentUser(user: User): void {
+    console.log('🔐 AuthService: Setting current user:', user.Email);
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
   }
 
   private clearCurrentUser(): void {
+    console.log('🔐 AuthService: Clearing current user');
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
@@ -120,6 +152,17 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  isAuthInitialized(): boolean {
+    return this.authInitializedSubject.value;
+  }
+
+  waitForAuthInitialization(): Observable<boolean> {
+    return this.authInitialized$.pipe(
+      filter(initialized => initialized),
+      take(1)
+    );
   }
 
   isPremiumUser(): boolean {

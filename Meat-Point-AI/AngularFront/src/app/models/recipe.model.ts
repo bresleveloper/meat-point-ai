@@ -1,7 +1,6 @@
 export interface Recipe {
   RecipeID: number;
   UserID: number;
-  BeefCutID: number;
   Title: string;
   Description: string;
   ComplexityLevel: number; // 1-5
@@ -34,7 +33,6 @@ export interface ShoppingListItem {
 }
 
 export interface RecipeGenerationRequest {
-  BeefCutID: number;
   ComplexityLevel: number;
   NumberOfDiners: number;
   DinerAges?: string;

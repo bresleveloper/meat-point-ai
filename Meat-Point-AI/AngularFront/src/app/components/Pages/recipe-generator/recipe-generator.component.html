@@ -1,7 +1,7 @@
 <div class="recipe-generator-container">
   <div class="generator-header">
-    <h1>🥩 AI Beef Chef</h1>
-    <p>Generate personalized beef recipes based on your cooking skills and preferences</p>
+    <h1>🥩 Meat Point AI - Your AI Private Chef 🍷</h1>
+    <p>Generate personalized beef recipes based on your cooking skills and preferences.</p>
     
     <!-- User usage status -->
     <div *ngIf="userUsage" class="usage-status">
@@ -21,11 +21,7 @@
     (valueChange)="onComplexityChange($event)">
   </app-complexity-slider>
 
-  <!-- Beef Cut Selector -->
-  <app-beef-cut-selector
-    [selectedCutId]="recipeRequest.BeefCutID"
-    (cutSelected)="onCutSelected($event)">
-  </app-beef-cut-selector>
+
 
   <!-- Recipe Configuration Form -->
   <div class="recipe-form-container">
@@ -141,17 +137,26 @@
       </div>
 
       <div *ngIf="!canGenerate() && userUsage?.CanGenerateMore" class="form-validation">
-        <p>Please select a beef cut and cooking method to generate your recipe.</p>
+        <p>Please select a cooking method to generate your recipe.</p>
       </div>
     </div>
   </div>
 
+    <!-- AI Cut Selection Info -->
+  <div class="recipe-form-container">
+    <h3>🤖 Smart AI Cut Selection</h3>
+    <p style="color: var(--text-secondary); text-align: center; margin: 0; line-height: 1.6;">
+      Our AI Chef will automatically suggest the perfect beef cut based on your cooking preferences!<br>
+      <small><em>Short cooking time = tender cuts • Long cooking time = tougher cuts perfect for braising</em></small>
+    </p>
+  </div>
+
   <!-- Recipe preview -->
-  <div *ngIf="selectedCut" class="recipe-preview">
+  <div *ngIf="recipeRequest.CookingMethod" class="recipe-preview">
     <h4>📋 Recipe Preview</h4>
     <div class="preview-content">
       <div class="preview-item">
-        <strong>Beef Cut:</strong> {{ selectedCut.Name }}
+        <strong>Beef Cut:</strong> <em>AI Chef will suggest the perfect cut!</em>
       </div>
       <div class="preview-item">
         <strong>Skill Level:</strong> 
@@ -163,7 +168,7 @@
       <div class="preview-item">
         <strong>Serves:</strong> {{ recipeRequest.NumberOfDiners }} people
       </div>
-      <div class="preview-item" *ngIf="recipeRequest.CookingMethod">
+      <div class="preview-item">
         <strong>Method:</strong> {{ recipeRequest.CookingMethod }}
       </div>
       <div class="preview-item">

@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BeefCut } from '../../../models/beef-cut.model';
 import { RecipeGenerationRequest } from '../../../models/recipe.model';
 import { AIService } from '../../../services/ai.service';
 import { AuthService } from '../../../services/auth.service';
@@ -17,18 +16,16 @@ export class RecipeGeneratorComponent implements OnInit {
 
   // Form data
   recipeRequest: RecipeGenerationRequest = {
-    BeefCutID: 0,
     ComplexityLevel: 3,
     NumberOfDiners: 4,
     DinerAges: '',
     CookingMethod: '',
-    CookingTimeMinutes: 60,
+    CookingTimeMinutes: this.getCookingTimeForComplexity(3),
     DietaryRestrictions: '',
     UserPrompt: ''
   };
 
   // State
-  selectedCut?: BeefCut;
   isGenerating = false;
   errorMessage = '';
   userUsage: any = null;
@@ -60,12 +57,7 @@ export class RecipeGeneratorComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    // Check authentication
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
+    console.log('📝 RecipeGenerator: Component initialized');
     this.loadUserUsage();
   }
 
@@ -82,22 +74,23 @@ export class RecipeGeneratorComponent implements OnInit {
 
   onComplexityChange(level: number): void {
     this.recipeRequest.ComplexityLevel = level;
+    this.recipeRequest.CookingTimeMinutes = this.getCookingTimeForComplexity(level);
   }
 
-  onCutSelected(cut: BeefCut): void {
-    this.selectedCut = cut;
-    this.recipeRequest.BeefCutID = cut.BeefCutID;
-    
-    // Auto-select compatible cooking methods based on cut
-    const bestMethods = cut.BestCookingMethods.split(',').map(m => m.trim());
-    if (bestMethods.length > 0 && !this.recipeRequest.CookingMethod) {
-      this.recipeRequest.CookingMethod = bestMethods[0];
-    }
+  private getCookingTimeForComplexity(level: number): number {
+    const timeMapping = {
+      1: 15,   // Stupid Dad - quick & easy
+      2: 30,   // Kitchen Newbie - simple recipes
+      3: 60,   // Home Cook - standard recipes
+      4: 120,  // Skilled Chef - complex techniques
+      5: 180   // Super Chef Mom - elaborate dishes
+    };
+    return timeMapping[level as keyof typeof timeMapping] || 60;
   }
+
 
   canGenerate(): boolean {
-    return this.recipeRequest.BeefCutID > 0 && 
-           this.recipeRequest.CookingMethod &&
+    return this.recipeRequest.CookingMethod &&
            this.recipeRequest.NumberOfDiners > 0 &&
            this.userUsage?.CanGenerateMore &&
            !this.isGenerating;

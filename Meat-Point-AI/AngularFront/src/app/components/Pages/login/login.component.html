@@ -1,7 +1,13 @@
 <div class="login-container">
-  <div class="login-card">
+  <!-- Auth checking state -->
+  <div *ngIf="isCheckingAuth" class="auth-loading-state">
+    <div class="loading-spinner"></div>
+    <p>Checking authentication...</p>
+  </div>
+
+  <div *ngIf="!isCheckingAuth" class="login-card">
     <div class="beef-header">
-      <h1 class="app-title">🥩 Beef Master</h1>
+      <h1 class="app-title">🥩 MEAT POINT AI</h1>
       <p class="app-subtitle">Master the art of cooking beef</p>
     </div>
 
@@ -64,4 +70,5 @@
       </ul>
     </div>
   </div>
+  
 </div>

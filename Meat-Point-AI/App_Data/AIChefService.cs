@@ -19,7 +19,6 @@ namespace Meat_Point_AI.App_Data
 
         public class RecipeGenerationRequest
         {
-            public int BeefCutID { get; set; }
             public int ComplexityLevel { get; set; }
             public int NumberOfDiners { get; set; }
             public string DinerAges { get; set; }
@@ -56,20 +55,11 @@ namespace Meat_Point_AI.App_Data
                     };
                 }
 
-                // Get beef cut information
-                var beefCut = DAL.select<BeefCuts>($"SELECT * FROM BeefCuts WHERE BeefCutID = {request.BeefCutID}").FirstOrDefault();
-                if (beefCut == null)
-                {
-                    return new RecipeGenerationResponse
-                    {
-                        Success = false,
-                        Message = "Invalid beef cut selected"
-                    };
-                }
+                // No specific beef cut - AI will suggest appropriate cut
 
                 // Build the AI prompt
                 string systemPrompt = BuildSystemPrompt();
-                string userPrompt = BuildUserPrompt(request, beefCut);
+                string userPrompt = BuildUserPrompt(request);
 
                 // Call OpenAI API
                 var openAIResponse = await CallOpenAIAsync(systemPrompt, userPrompt);
@@ -132,14 +122,35 @@ namespace Meat_Point_AI.App_Data
         private static string BuildSystemPrompt()
         {
             return @"You are an expert beef chef specializing in teaching people how to cook different cuts of beef. 
-You create recipes that are educational and matched to the cook's skill level. Your recipes focus ONLY on beef cuts from cows.
+You create recipes that are very tasteful and matched to the cook's skill level. Your recipes focus ONLY on beef cuts from cows.
+
+CRITICAL QUANTITY REQUIREMENTS:
+- ALL ingredients MUST include specific, precise quantities
+- NEVER leave quantities vague or missing
+- Calculate meat portions: 6-8 oz per person (e.g., 4 people = 2-2.5 lbs total meat)
+- Use standard measurements: lbs, oz, cups, tbsp, tsp, pieces, cloves
+
+MEAT PORTION GUIDELINES:
+- Steaks/chops: 6-8 oz per person
+- Roasts: 8-10 oz per person (includes bone weight)
+- Ground beef: 4-6 oz per person
+- Always specify cut thickness for steaks (e.g., ""1-inch thick ribeye steaks"")
+
+MEASUREMENT STANDARDS:
+- Meat: ""2 lbs ribeye steaks"", ""1 lb ground beef (80/20)""
+- Vegetables: ""1 large yellow onion"", ""3 cloves garlic"", ""2 medium carrots""
+- Liquids: ""2 cups beef broth"", ""1/4 cup olive oil"", ""2 tbsp soy sauce""
+- Seasonings: ""2 tsp salt"", ""1 tbsp black pepper"", ""1 tsp garlic powder""
 
 IMPORTANT: You must respond with a valid JSON object in this exact format:
 {
   ""title"": ""Recipe name"",
   ""description"": ""Brief description"",
   ""ingredients"": [
-    {""item"": ""ingredient name"", ""quantity"": ""amount"", ""category"": ""Meat/Vegetables/Seasonings/Pantry""}
+    {""item"": ""ribeye steaks"", ""quantity"": ""2 lbs (1-inch thick)"", ""category"": ""Meat""},
+    {""item"": ""yellow onion"", ""quantity"": ""1 large"", ""category"": ""Vegetables""},
+    {""item"": ""garlic"", ""quantity"": ""3 cloves"", ""category"": ""Vegetables""},
+    {""item"": ""olive oil"", ""quantity"": ""2 tbsp"", ""category"": ""Pantry""}
   ],
   ""instructions"": [
     ""Step 1 instruction"",
@@ -147,15 +158,21 @@ IMPORTANT: You must respond with a valid JSON object in this exact format:
   ],
   ""temperatureGuide"": ""Internal temperatures and doneness levels"",
   ""shoppingList"": [
-    {""item"": ""shopping item"", ""category"": ""category"", ""notes"": ""special instructions""}
+    {""item"": ""ribeye steaks"", ""category"": ""Meat"", ""notes"": ""Ask for 1-inch thick cuts""},
+    {""item"": ""yellow onion"", ""category"": ""Vegetables"", ""notes"": ""Choose large, firm onion""}
   ],
-  ""cookingTips"": ""Additional tips for this specific cut""
+  ""cookingTips"": ""Add 1 deep insight about the specific cut""
 }
 
-Make recipes educational about the specific beef cut, its characteristics, and why certain cooking methods work best.";
+VALIDATION RULES:
+- Every ingredient MUST have a specific quantity (not ""some"", ""a little"", or ""to taste"")
+- Quantities must be measurable and precise
+- Include preparation notes in item name when relevant (e.g., ""diced"", ""minced"", ""sliced"")
+
+Make recipes that emphasize the taste of the specific beef cut.";
         }
 
-        private static string BuildUserPrompt(RecipeGenerationRequest request, BeefCuts beefCut)
+        private static string BuildUserPrompt(RecipeGenerationRequest request)
         {
             var complexityDescriptions = new Dictionary<int, string>
             {
@@ -177,27 +194,35 @@ Make recipes educational about the specific beef cut, its characteristics, and w
 
             return $@"Create a beef recipe with these requirements:
 
-BEEF CUT: {beefCut.Name}
-- Description: {beefCut.Description}
-- Tenderness: {beefCut.Tenderness}
-- Best cooking methods: {beefCut.BestCookingMethods}
-- Complexity level: {(complexityDescriptions.ContainsKey(request.ComplexityLevel) ? complexityDescriptions[request.ComplexityLevel] : "Intermediate")}
-
-COOKING REQUIREMENTS:
+COOKING PREFERENCES:
 - Cooking method: {request.CookingMethod}
 - Cooking time: approximately {request.CookingTimeMinutes} minutes
 - Number of diners: {request.NumberOfDiners}
+- Complexity level: {(complexityDescriptions.ContainsKey(request.ComplexityLevel) ? complexityDescriptions[request.ComplexityLevel] : "Intermediate")}
 - Dietary restrictions: {request.DietaryRestrictions}
 {ageContext}
 
 {(!string.IsNullOrEmpty(request.UserPrompt) ? $"SPECIAL REQUESTS: {request.UserPrompt}" : "")}
 
+BEEF CUT SELECTION:
+Based on the cooking time and method preferences, YOU MUST select the most appropriate beef cut:
+- For SHORT cooking times (≤30 minutes): Choose TENDER cuts (Tenderloin, Ribeye, Strip Steak, Sirloin)
+- For LONG cooking times (≥120 minutes): Choose TOUGHER cuts perfect for braising/slow cooking (Chuck Roast, Brisket, Short Ribs)
+- For MEDIUM cooking times (30-120 minutes): Choose MODERATE tenderness cuts (Top Round, Bottom Round, Tri-tip)
+
 Create a recipe that:
-1. Teaches about this specific beef cut and why it's prepared this way
-2. Matches the complexity level (simpler for lower levels, more advanced for higher levels)
-3. Includes proper temperature guidelines for food safety
-4. Provides a complete shopping list organized by category
-5. Gives educational tips about working with this cut of beef
+1. SELECTS and EXPLAINS the best beef cut for the cooking method and time specified
+2. EXPLAINS why this cut works best for the cooking method (tenderness level, marbling, etc.)
+3. Teaches about the selected beef cut and why it's prepared this way
+4. Matches the complexity level (simpler for lower levels, more advanced for higher levels)
+5. Includes proper temperature guidelines for food safety
+6. Provides a complete shopping list organized by category
+7. Gives educational tips about working with the selected cut of beef
+
+In your JSON response, make sure to:
+- Include the selected beef cut name in the title
+- Explain the cut selection reasoning in the description
+- Add cut-specific cooking tips in the cookingTips section
 
 Respond ONLY with valid JSON in the specified format.";
         }
@@ -269,7 +294,6 @@ Respond ONLY with valid JSON in the specified format.";
                 var recipe = new Recipes
                 {
                     UserID = userId,
-                    BeefCutID = request.BeefCutID,
                     //Title = jObject["title,
                     Title = jObject["title"].ToString(),
                     Description = jObject["description"].ToString(),

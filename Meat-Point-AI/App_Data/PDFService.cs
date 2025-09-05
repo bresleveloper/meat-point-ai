@@ -26,7 +26,7 @@ namespace Meat_Point_AI.App_Data
             public string notes { get; set; }
         }
 
-        public static byte[] GenerateRecipePDF(Recipes recipe, BeefCuts beefCut)
+        public static byte[] GenerateRecipePDF(Recipes recipe)
         {
             try
             {
@@ -68,13 +68,13 @@ namespace Meat_Point_AI.App_Data
                     }
 
                     // PAGE 1 - SHOPPING LIST
-                    GenerateShoppingListPage(document, recipe, beefCut, shoppingList, ingredients, titleFont, headerFont, subHeaderFont, normalFont, smallFont);
+                    GenerateShoppingListPage(document, recipe, shoppingList, ingredients, titleFont, headerFont, subHeaderFont, normalFont, smallFont);
 
                     // Start new page
                     document.NewPage();
 
                     // PAGE 2 - COOKING RECIPE
-                    GenerateCookingRecipePage(document, recipe, beefCut, ingredients, instructions, titleFont, headerFont, subHeaderFont, normalFont, smallFont);
+                    GenerateCookingRecipePage(document, recipe, ingredients, instructions, titleFont, headerFont, subHeaderFont, normalFont, smallFont);
 
                     document.Close();
                     return memoryStream.ToArray();
@@ -87,12 +87,12 @@ namespace Meat_Point_AI.App_Data
             }
         }
 
-        private static void GenerateShoppingListPage(Document document, Recipes recipe, BeefCuts beefCut, 
+        private static void GenerateShoppingListPage(Document document, Recipes recipe, 
             List<ShoppingListItem> shoppingList, List<RecipeIngredient> ingredients,
             Font titleFont, Font headerFont, Font subHeaderFont, Font normalFont, Font smallFont)
         {
             // Header with logo
-            Paragraph header = new Paragraph("🥩 BEEF MASTER - SHOPPING LIST", titleFont);
+            Paragraph header = new Paragraph("🥩 MEAT POINT AI - SHOPPING LIST", titleFont);
             header.Alignment = Element.ALIGN_CENTER;
             header.SpacingAfter = 20f;
             document.Add(header);
@@ -110,33 +110,10 @@ namespace Meat_Point_AI.App_Data
             
             AddInfoCell(infoTable, "Serves: " + recipe.NumberOfDiners, normalFont);
             AddInfoCell(infoTable, "Cooking Time: " + GetCookingTimeDisplay(recipe.CookingTimeMinutes), normalFont);
-            AddInfoCell(infoTable, "Skill Level: " + GetComplexityStars(recipe.ComplexityLevel), normalFont);
+            AddInfoCell(infoTable, "Skill Level: " + GetComplexityLabel(recipe.ComplexityLevel) + " " + GetComplexityStars(recipe.ComplexityLevel), normalFont);
             
             document.Add(infoTable);
 
-            // Beef cut section
-            if (beefCut != null)
-            {
-                Paragraph beefHeader = new Paragraph("🥩 PRIMARY BEEF CUT", subHeaderFont);
-                beefHeader.SpacingAfter = 10f;
-                document.Add(beefHeader);
-
-                PdfPTable beefTable = new PdfPTable(1);
-                beefTable.WidthPercentage = 100;
-                beefTable.SpacingAfter = 20f;
-
-                PdfPCell beefCell = new PdfPCell();
-                beefCell.Padding = 10f;
-                beefCell.BackgroundColor = new BaseColor(255, 248, 220); // Cornsilk
-
-                string beefInfo = $"• {beefCut.Name} - from {beefCut.CowBodyLocation}\n";
-                beefInfo += $"• Look for: {beefCut.MarblingLevel} marbling, {beefCut.Tenderness} texture\n";
-                beefInfo += $"• Ask butcher for approximately {recipe.NumberOfDiners * 0.5:F1} lbs total";
-
-                beefCell.AddElement(new Paragraph(beefInfo, normalFont));
-                beefTable.AddCell(beefCell);
-                document.Add(beefTable);
-            }
 
             // Shopping list by category
             var shoppingByCategory = shoppingList.GroupBy(s => s.category ?? "Other").ToDictionary(g => g.Key, g => g.ToList());
@@ -151,7 +128,19 @@ namespace Meat_Point_AI.App_Data
                 // Items in category
                 foreach (var item in category.Value)
                 {
-                    string itemText = "   □ " + item.item;
+                    // Try to find quantity from ingredients
+                    string quantity = FindIngredientQuantity(item.item, ingredients);
+                    
+                    string itemText = "   □ ";
+                    if (!string.IsNullOrEmpty(quantity))
+                    {
+                        itemText += quantity + " " + item.item;
+                    }
+                    else
+                    {
+                        itemText += item.item;
+                    }
+                    
                     if (!string.IsNullOrEmpty(item.notes))
                         itemText += " (" + item.notes + ")";
 
@@ -163,32 +152,18 @@ namespace Meat_Point_AI.App_Data
                 document.Add(new Paragraph(" ", normalFont)); // Spacing between categories
             }
 
-            // Shopping tips
-            Paragraph tipsHeader = new Paragraph("💡 SHOPPING TIPS", subHeaderFont);
-            tipsHeader.SpacingAfter = 10f;
-            document.Add(tipsHeader);
-
-            string tips = "• Shop for meat last to keep it cold\n";
-            tips += "• Don't be afraid to ask the butcher questions about cuts\n";
-            tips += "• Check expiration dates and choose the freshest meat\n";
-            tips += "• Consider buying extra and freezing for later use";
-
-            Paragraph tipsPara = new Paragraph(tips, normalFont);
-            tipsPara.SpacingAfter = 20f;
-            document.Add(tipsPara);
-
             // Footer
-            Paragraph footer = new Paragraph("Generated with Beef Master 🤖\nGenerated on " + DateTime.Now.ToString("yyyy-MM-dd"), smallFont);
+            Paragraph footer = new Paragraph("Generated with MEAT POINT AI 🤖\nGenerated on " + DateTime.Now.ToString("yyyy-MM-dd"), smallFont);
             footer.Alignment = Element.ALIGN_CENTER;
             document.Add(footer);
         }
 
-        private static void GenerateCookingRecipePage(Document document, Recipes recipe, BeefCuts beefCut,
+        private static void GenerateCookingRecipePage(Document document, Recipes recipe,
             List<RecipeIngredient> ingredients, List<string> instructions,
             Font titleFont, Font headerFont, Font subHeaderFont, Font normalFont, Font smallFont)
         {
             // Header
-            Paragraph header = new Paragraph("🥩 BEEF MASTER - COOKING RECIPE", titleFont);
+            Paragraph header = new Paragraph("🥩 MEAT POINT AI - COOKING RECIPE", titleFont);
             header.Alignment = Element.ALIGN_CENTER;
             header.SpacingAfter = 20f;
             document.Add(header);
@@ -204,25 +179,6 @@ namespace Meat_Point_AI.App_Data
             description.SpacingAfter = 15f;
             document.Add(description);
 
-            // Beef cut identification
-            if (beefCut != null)
-            {
-                PdfPTable cutTable = new PdfPTable(1);
-                cutTable.WidthPercentage = 100;
-                cutTable.SpacingAfter = 20f;
-
-                PdfPCell cutCell = new PdfPCell();
-                cutCell.Padding = 10f;
-                cutCell.BackgroundColor = new BaseColor(240, 230, 140); // Khaki
-
-                string cutInfo = $"🥩 BEEF CUT: {beefCut.Name}\n";
-                cutInfo += $"Location: {beefCut.CowBodyLocation} | Tenderness: {beefCut.Tenderness}\n";
-                cutInfo += $"Best cooking methods: {beefCut.BestCookingMethods}";
-
-                cutCell.AddElement(new Paragraph(cutInfo, normalFont));
-                cutTable.AddCell(cutCell);
-                document.Add(cutTable);
-            }
 
             // Equipment needed (derived from cooking method)
             Paragraph equipHeader = new Paragraph("🔧 EQUIPMENT NEEDED", subHeaderFont);
@@ -235,7 +191,7 @@ namespace Meat_Point_AI.App_Data
             document.Add(equipPara);
 
             // Ingredients by category
-            Paragraph ingredHeader = new Paragraph("📝 INGREDIENTS", subHeaderFont);
+            /*Paragraph ingredHeader = new Paragraph("📝 INGREDIENTS", subHeaderFont);
             ingredHeader.SpacingAfter = 10f;
             document.Add(ingredHeader);
 
@@ -255,7 +211,7 @@ namespace Meat_Point_AI.App_Data
                     document.Add(ingredPara);
                 }
                 document.Add(new Paragraph(" ", normalFont));
-            }
+            }*/
 
             // Cooking instructions
             Paragraph instrHeader = new Paragraph("👩‍🍳 COOKING INSTRUCTIONS", subHeaderFont);
@@ -283,20 +239,19 @@ namespace Meat_Point_AI.App_Data
                 document.Add(tempPara);
             }
 
-            // Cooking tips
-            if (beefCut != null && !string.IsNullOrEmpty(beefCut.CookingTips))
-            {
-                Paragraph tipsHeader = new Paragraph("💡 COOKING TIPS", subHeaderFont);
-                tipsHeader.SpacingAfter = 8f;
-                document.Add(tipsHeader);
 
-                Paragraph tipsPara = new Paragraph(beefCut.CookingTips, normalFont);
-                tipsPara.SpacingAfter = 15f;
-                document.Add(tipsPara);
-            }
+            // Cooking tips (in ai, notes in db)
+            Paragraph tipsHeader = new Paragraph("💡 ONE FREE DEEP INSIGHT ON THIS CUT", subHeaderFont);
+            tipsHeader.SpacingAfter = 8f;
+            document.Add(tipsHeader);
+
+            Paragraph tipsPara = new Paragraph(recipe.Notes, normalFont);
+            tipsPara.SpacingAfter = 15f;
+            document.Add(tipsPara);
+
 
             // Footer
-            Paragraph footer = new Paragraph("🤖 Generated with Beef Master AI Chef\nCo-Authored-By: Claude\nGenerated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"), smallFont);
+            Paragraph footer = new Paragraph("🤖 Generated with MEAT POINT AI Chef\nCo-Authored-By: Claude\nGenerated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"), smallFont);
             footer.Alignment = Element.ALIGN_CENTER;
             document.Add(footer);
         }
@@ -325,6 +280,41 @@ namespace Meat_Point_AI.App_Data
         private static string GetComplexityStars(int level)
         {
             return new string('★', level) + new string('☆', 5 - level);
+        }
+
+        private static string GetComplexityLabel(int level)
+        {
+            switch (level)
+            {
+                case 1: return "🤷‍♂️ Stupid Dad";
+                case 2: return "👨‍🍳 Kitchen Newbie";
+                case 3: return "🏠 Home Cook";
+                case 4: return "👩‍🍳 Skilled Chef";
+                case 5: return "⭐ Super Chef Mom";
+                default: return "Unknown Level";
+            }
+        }
+
+        private static string FindIngredientQuantity(string shoppingItem, List<RecipeIngredient> ingredients)
+        {
+            if (ingredients == null || string.IsNullOrEmpty(shoppingItem))
+                return string.Empty;
+
+            // Try exact match first
+            var exactMatch = ingredients.FirstOrDefault(i => 
+                string.Equals(i.item, shoppingItem, StringComparison.OrdinalIgnoreCase));
+            if (exactMatch != null && !string.IsNullOrEmpty(exactMatch.quantity))
+                return exactMatch.quantity;
+
+            // Try partial match (shopping item contains ingredient or vice versa)
+            var partialMatch = ingredients.FirstOrDefault(i =>
+                (!string.IsNullOrEmpty(i.item) && 
+                 (i.item.ToLower().Contains(shoppingItem.ToLower()) || 
+                  shoppingItem.ToLower().Contains(i.item.ToLower()))));
+            if (partialMatch != null && !string.IsNullOrEmpty(partialMatch.quantity))
+                return partialMatch.quantity;
+
+            return string.Empty;
         }
 
         private static string GetEquipmentForCookingMethod(string cookingMethod)

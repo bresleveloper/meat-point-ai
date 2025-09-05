@@ -48,10 +48,6 @@ export class ExampleItemService extends SimpleService<ExampleItem> {
 }
 
 // Beef Meal Planning Services
-@Injectable({ providedIn: 'root' })
-export class BeefCutService extends SimpleService<any> {
-  constructor() { super("BeefCut") }
-}
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService extends SimpleService<any> {

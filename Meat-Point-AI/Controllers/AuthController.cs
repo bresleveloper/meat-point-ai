@@ -153,7 +153,7 @@ namespace Meat_Point_AI.Controllers
         }
 
         [HttpGet]
-        [Route("api/auth/check")]
+        [Route("api/auth/CheckAuth")]
         public AuthResponse CheckAuth()
         {
             try

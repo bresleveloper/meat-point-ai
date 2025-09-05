@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\OWNER\\Desktop\\CODE\\claude\\MEAT-MEAL\\**)",
+      "Read(/C:\\Users\\OWNER\\Desktop\\CODE\\claude\\MEAT-MEAL\\Meat-Point-AI/**)",
+      "Read(/C:\\Users\\OWNER\\Desktop\\CODE\\claude\\MEAT-MEAL\\Meat-Point-AI/**)",
+      "Read(/C:\\Users\\OWNER\\Desktop\\CODE\\claude\\MEAT-MEAL\\Meat-Point-AI\\AngularFront\\src\\app\\components\\Pages\\recipe-display/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

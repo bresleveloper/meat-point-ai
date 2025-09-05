@@ -33,6 +33,22 @@ CREATE TABLE BeefCuts (
     IsActive bit NOT NULL DEFAULT 1
 );
 
+-- BeefCuts table
+CREATE TABLE BeefCutsHebrew (
+    BeefCutID int IDENTITY(1,1) PRIMARY KEY,
+    Name nvarchar(100) NOT NULL,
+    Description nvarchar(1000) NULL,
+    CowBodyLocation nvarchar(100) NULL,
+    Tenderness nvarchar(50) NULL,
+    MarblingLevel nvarchar(50) NULL,
+    BestCookingMethods nvarchar(500) NULL,
+    ComplexityLevel int NOT NULL,
+    ImageUrl nvarchar(500) NULL,
+    CookingTips nvarchar(2000) NULL,
+    TemperatureGuidelines nvarchar(1000) NULL,
+    IsActive bit NOT NULL DEFAULT 1
+);
+
 -- Recipes table
 CREATE TABLE Recipes (
     RecipeID int IDENTITY(1,1) PRIMARY KEY,

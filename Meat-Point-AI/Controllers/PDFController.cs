@@ -40,11 +40,8 @@ namespace Meat_Point_AI.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Access denied to this recipe");
                 }
 
-                // Get the beef cut information
-                var beefCut = DAL.select<BeefCuts>($"SELECT * FROM BeefCuts WHERE BeefCutID = {recipe.BeefCutID}").FirstOrDefault();
-
                 // Generate PDF
-                byte[] pdfBytes = PDFService.GenerateRecipePDF(recipe, beefCut);
+                byte[] pdfBytes = PDFService.GenerateRecipePDF(recipe);
 
                 // Create response
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);

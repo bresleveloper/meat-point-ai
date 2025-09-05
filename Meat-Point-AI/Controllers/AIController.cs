@@ -39,7 +39,7 @@ namespace Meat_Point_AI.Controllers
                     };
                 }
 
-                if (request.BeefCutID <= 0 || request.ComplexityLevel < 1 || request.ComplexityLevel > 5 || 
+                if (request.ComplexityLevel < 1 || request.ComplexityLevel > 5 || 
                     request.NumberOfDiners <= 0 || request.CookingTimeMinutes <= 0)
                 {
                     return new RecipeGenerationResponse

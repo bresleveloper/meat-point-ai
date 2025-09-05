@@ -21,3 +21,13 @@ added to `.gitignore` my `Web.config` for keys protection ect., see the base of 
 renaming all the C# stuff got help with [this stack thread](https://stackoverflow.com/questions/2043618/proper-way-to-rename-solution-and-directories-in-visual-studio)
 
 
+
+
+### free .net hosting
+
+* [quora ideas](https://www.quora.com/How-can-I-deploy-my-ASP-NET-website-for-free-Are-there-any-good-solutions)
+* [freehosting1.net suggestions](https://freehosting1.net/free_aspnet_hosting.aspx)
+* i use [freeasphosting.net](https://freeasphosting.net/) (not same as above)
+* [FreeAspNetHosting](https://somee.com/FreeAspNetHosting.aspx)
+* [monsterasp.net](https://www.monsterasp.net/)
+

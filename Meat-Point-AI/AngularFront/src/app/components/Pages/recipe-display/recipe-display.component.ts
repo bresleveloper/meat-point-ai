@@ -1,10 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BeefCut } from '../../../models/beef-cut.model';
 import { Recipe, RecipeIngredient, ShoppingListItem } from '../../../models/recipe.model';
 import { AuthService } from '../../../services/auth.service';
-import { BeefCutService, RecipeService } from '../../../services/simple-service.service';
+import { RecipeService } from '../../../services/simple-service.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -18,10 +17,8 @@ export class RecipeDisplayComponent implements OnInit {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private recipeService = inject(RecipeService);
-  private beefCutService = inject(BeefCutService);
 
   recipe?: Recipe;
-  beefCut?: BeefCut;
   ingredients: RecipeIngredient[] = [];
   instructions: string[] = [];
   shoppingList: ShoppingListItem[] = [];
@@ -31,12 +28,8 @@ export class RecipeDisplayComponent implements OnInit {
   currentView: 'recipe' | 'shopping' = 'recipe';
 
   ngOnInit(): void {
-    // Check authentication
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
+    console.log('🍽️ RecipeDisplay: Component initialized');
+    
     const recipeId = this.route.snapshot.paramMap.get('id');
     if (recipeId) {
       this.loadRecipe(parseInt(recipeId));
@@ -51,7 +44,7 @@ export class RecipeDisplayComponent implements OnInit {
       next: (recipe: Recipe) => {
         this.recipe = recipe;
         this.parseRecipeData();
-        this.loadBeefCut();
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading recipe:', error);
@@ -61,20 +54,6 @@ export class RecipeDisplayComponent implements OnInit {
     });
   }
 
-  private loadBeefCut(): void {
-    if (!this.recipe) return;
-
-    this.beefCutService.get(this.recipe.BeefCutID).subscribe({
-      next: (beefCut: BeefCut) => {
-        this.beefCut = beefCut;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading beef cut:', error);
-        this.isLoading = false;
-      }
-    });
-  }
 
   private parseRecipeData(): void {
     if (!this.recipe) return;

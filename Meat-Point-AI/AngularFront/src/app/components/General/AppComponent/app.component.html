@@ -1,6 +1,14 @@
 
 <div class="app-container">
-  <div class="app-content center">
+  <!-- App initialization loading -->
+  <div *ngIf="isInitializing" class="app-loading-state">
+    <div class="loading-spinner"></div>
+    <h2>🥩 MEAT POINT AI</h2>
+    <p>Initializing...</p>
+  </div>
+  
+  <!-- Main app content -->
+  <div *ngIf="!isInitializing" class="app-content center">
     <router-outlet />
   </div>
 </div>

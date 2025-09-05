@@ -11,7 +11,6 @@ import { RegisterComponent } from './components/Pages/register/register.componen
 import { RecipeGeneratorComponent } from './components/Pages/recipe-generator/recipe-generator.component';
 import { RecipeDisplayComponent } from './components/Pages/recipe-display/recipe-display.component';
 import { UpgradeComponent } from './components/Pages/upgrade/upgrade.component';
-import { BeefCutSelectorComponent } from './components/General/beef-cut-selector/beef-cut-selector.component';
 import { ComplexitySliderComponent } from './components/General/complexity-slider/complexity-slider.component';
 
 @NgModule({
@@ -24,7 +23,6 @@ import { ComplexitySliderComponent } from './components/General/complexity-slide
     RecipeDisplayComponent,
     UpgradeComponent,
     ComplexitySliderComponent,
-    BeefCutSelectorComponent
   ],
   imports: [
     ComponentsModule,

@@ -10,7 +10,6 @@ namespace Meat_Point_AI.Controllers
     // Beef Meal Planning Controllers
     public class UserController : SimpleController<Users> { }
     public class RecipeController : SimpleController<Recipes> { }
-    public class BeefCutController : SimpleController<BeefCuts> { }
     public class MealPlanController : SimpleController<MealPlans> { }
     public class RecipeRatingController : SimpleController<RecipeRatings> { }
 

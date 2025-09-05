@@ -53,43 +53,6 @@
       </div>
     </div>
 
-    <!-- Beef Cut Information -->
-    <div *ngIf="beefCut" class="beef-cut-info">
-      <h2>🥩 About {{ beefCut.Name }}</h2>
-      <div class="cut-details">
-        <div class="cut-image-section">
-          <!-- Raw beef cut placeholder -->
-          <div class="cut-image-placeholder">
-            <div class="cut-illustration">🥩</div>
-            <div class="cut-location">{{ beefCut.CowBodyLocation }}</div>
-          </div>
-        </div>
-        
-        <div class="cut-characteristics">
-          <div class="characteristic">
-            <strong>Tenderness:</strong> {{ beefCut.Tenderness }}
-          </div>
-          <div class="characteristic">
-            <strong>Marbling:</strong> {{ beefCut.MarblingLevel }}
-          </div>
-          <div class="characteristic">
-            <strong>Best Methods:</strong> {{ beefCut.BestCookingMethods }}
-          </div>
-        </div>
-      </div>
-      
-      <div class="cut-education">
-        <div class="cooking-tips">
-          <h4>🔥 Cooking Tips</h4>
-          <p>{{ beefCut.CookingTips }}</p>
-        </div>
-        
-        <div class="temperature-guide">
-          <h4>🌡️ Temperature Guide</h4>
-          <p>{{ beefCut.TemperatureGuidelines }}</p>
-        </div>
-      </div>
-    </div>
 
     <!-- Header with navigation -->
     <div class="recipe-header">
@@ -201,15 +164,6 @@
         </div>
       </div>
 
-      <!-- Butcher Notes -->
-      <div class="butcher-notes">
-        <h4>🥩 Butcher Shop Tips</h4>
-        <ul>
-          <li>Ask for {{ beefCut?.Name }} from the {{ beefCut?.CowBodyLocation }}</li>
-          <li>Look for {{ beefCut?.MarblingLevel?.toLowerCase() }} marbling</li>
-          <li *ngIf="recipe.NumberOfDiners > 1">Plan for {{ recipe.NumberOfDiners }} servings</li>
-        </ul>
-      </div>
     </div>
 
   </div>

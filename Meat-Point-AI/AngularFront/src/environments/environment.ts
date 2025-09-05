@@ -1,5 +1,7 @@
 export const environment = {
-    serverApiUrl: "http://localhost:49476/api",
+    serverApiUrl: "https://bresleveloper.bsite.net/api",
     production: true,
-    frontUrl: "http://localhost:4200",
+    frontUrl: "https://bresleveloper.bsite.net/",
 };
+
+
