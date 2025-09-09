@@ -89,10 +89,10 @@ namespace Meat_Point_AI.App_Data
                 if (recipeId > 0)
                 {
                     recipe.RecipeID = recipeId;
-                    
+
                     // Increment user's usage count
                     AuthService.IncrementUsageCount(userId);
-                    
+
                     return new RecipeGenerationResponse
                     {
                         Success = true,
@@ -132,7 +132,7 @@ namespace Meat_Point_AI.App_Data
             };
 
             string targetLanguage = languageNames.ContainsKey(language) ? languageNames[language] : "English";
-            string languageInstruction = targetLanguage != "English" 
+            string languageInstruction = targetLanguage != "English"
                 ? $"IMPORTANT: Respond entirely in {targetLanguage}. Generate all recipe content including title, description, ingredients, instructions, cooking tips, and temperature guide in {targetLanguage}. "
                 : "";
 
@@ -142,17 +142,17 @@ You create recipes that are very tasteful and matched to the cook's skill level.
 CRITICAL QUANTITY REQUIREMENTS:
 - ALL ingredients MUST include specific, precise quantities
 - NEVER leave quantities vague or missing
-- Calculate meat portions: 6-8 oz per person (e.g., 4 people = 2-2.5 lbs total meat)
-- Use standard measurements: lbs, oz, cups, tbsp, tsp, pieces, cloves
+- Calculate meat portions: 150-200g per person (e.g., 4 people = 1kg total meat)
+- Use standard measurements: kg, g, cups, tbsp, tsp, pieces, cloves
 
 MEAT PORTION GUIDELINES:
-- Steaks/chops: 6-8 oz per person
-- Roasts: 8-10 oz per person (includes bone weight)
-- Ground beef: 4-6 oz per person
-- Always specify cut thickness for steaks (e.g., ""1-inch thick ribeye steaks"")
+- Steaks/chops: 150-200g per person
+- Roasts: 200-250g per person (includes bone weight)
+- Ground beef: 100-150g per person
+- Always specify cut thickness for steaks (e.g., ""3cm thick ribeye steaks"")
 
 MEASUREMENT STANDARDS:
-- Meat: ""2 lbs ribeye steaks"", ""1 lb ground beef (80/20)""
+- Meat: ""1kg ribeye steaks"", ""0.5kg ground beef (80/20)""
 - Vegetables: ""1 large yellow onion"", ""3 cloves garlic"", ""2 medium carrots""
 - Liquids: ""2 cups beef broth"", ""1/4 cup olive oil"", ""2 tbsp soy sauce""
 - Seasonings: ""2 tsp salt"", ""1 tbsp black pepper"", ""1 tsp garlic powder""
@@ -162,7 +162,7 @@ IMPORTANT: You must respond with a valid JSON object in this exact format:
   ""title"": ""Recipe name"",
   ""description"": ""Brief description"",
   ""ingredients"": [
-    {{""item"": ""ribeye steaks"", ""quantity"": ""2 lbs (1-inch thick)"", ""category"": ""Meat""}},
+    {{""item"": ""ribeye steaks"", ""quantity"": ""1kg (3cm thick)"", ""category"": ""Meat""}},
     {{""item"": ""yellow onion"", ""quantity"": ""1 large"", ""category"": ""Vegetables""}},
     {{""item"": ""garlic"", ""quantity"": ""3 cloves"", ""category"": ""Vegetables""}},
     {{""item"": ""olive oil"", ""quantity"": ""2 tbsp"", ""category"": ""Pantry""}}
@@ -173,7 +173,7 @@ IMPORTANT: You must respond with a valid JSON object in this exact format:
   ],
   ""temperatureGuide"": ""Internal temperatures and doneness levels"",
   ""shoppingList"": [
-    {{""item"": ""ribeye steaks"", ""category"": ""Meat"", ""notes"": ""Ask for 1-inch thick cuts""}},
+    {{""item"": ""ribeye steaks"", ""category"": ""Meat"", ""notes"": ""Ask for 3cm thick cuts""}}
     {{""item"": ""yellow onion"", ""category"": ""Vegetables"", ""notes"": ""Choose large, firm onion""}}
   ],
   ""cookingTips"": ""Add 1 deep insight about the specific cut""
@@ -196,10 +196,10 @@ Make recipes that emphasize the taste of the specific beef cut.";
                 var languageNames = new Dictionary<string, string>
                 {
                     { "es", "Spanish" },
-                    { "fr", "French" }, 
+                    { "fr", "French" },
                     { "he", "Hebrew" }
                 };
-                
+
                 if (languageNames.ContainsKey(request.Language))
                 {
                     languageInstruction = $"CRITICAL: Generate the entire recipe response in {languageNames[request.Language]}. All text including ingredients, instructions, descriptions, and tips must be in {languageNames[request.Language]}. ";
@@ -303,12 +303,35 @@ Respond ONLY with valid JSON in the specified format.";
             }
         }
 
+        private static string CleanHebrewMeasurements(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            // Remove quotation marks from common Hebrew measurement abbreviations
+            text = text.Replace("ק\"ג", "קג");
+            text = text.Replace("ג\"ר", "גר");
+            text = text.Replace("ס\"מ", "סמ");
+            text = text.Replace("מ\"מ", "מממ");
+            text = text.Replace("מ\"ל", "מל");
+            text = text.Replace("ל\"יטר", "ליטר");
+            text = text.Replace("כ\"ף", "כף");
+            text = text.Replace("כפי\"ת", "כפית");
+
+            return text;
+        }
+
         private static Recipes ParseAIResponse(string aiResponse, RecipeGenerationRequest request, int userId)
         {
             try
             {
+                //Logger.Log("ParseAIResponse start");
                 // Clean up the response in case it has markdown formatting
                 aiResponse = aiResponse.Trim();
+
+                // Clean Hebrew measurements from quotation marks
+                //Logger.Log("ParseAIResponse CleanHebrewMeasurements");
+                aiResponse = CleanHebrewMeasurements(aiResponse);
+
                 if (aiResponse.StartsWith("```json"))
                 {
                     aiResponse = aiResponse.Substring(7);
@@ -318,10 +341,25 @@ Respond ONLY with valid JSON in the specified format.";
                     aiResponse = aiResponse.Substring(0, aiResponse.Length - 3);
                 }
 
+                //Logger.Log("ParseAIResponse DeserializeObject aiResponse");
                 //dynamic responseObj = JsonConvert.DeserializeObject(aiResponse);
                 JObject jObject = JsonConvert.DeserializeObject<JObject>(aiResponse);
 
+                //heb ingredients somtimes fail
+                string ingredientsSerialized = string.Empty;
+                try
+                {
+                    Logger.Log("ParseAIResponse ingredientsSerialized");
+                    ingredientsSerialized = JsonConvert.SerializeObject(jObject["ingredients"].ToString());
+                }
+                catch (Exception ingredientsEX)
+                {
+                    Logger.Error($"Recipe ingredients error: {ingredientsEX.Message}");
+                    Logger.Error($"ingredients source: {jObject["ingredients"]}");
+                    return null;
+                }
 
+                //Logger.Log("ParseAIResponse new Recipes");
                 var recipe = new Recipes
                 {
                     UserID = userId,
@@ -334,7 +372,7 @@ Respond ONLY with valid JSON in the specified format.";
                     CookingMethod = request.CookingMethod ?? "",
                     CookingTimeMinutes = request.CookingTimeMinutes,
                     DietaryRestrictions = request.DietaryRestrictions ?? "",
-                    Ingredients = JsonConvert.SerializeObject(jObject["ingredients"].ToString()),
+                    Ingredients = ingredientsSerialized,
                     Instructions = JsonConvert.SerializeObject(jObject["instructions"].ToString()),
                     TemperatureGuide = jObject["temperatureGuide"].ToString(),
                     ShoppingList = JsonConvert.SerializeObject(jObject["shoppingList"].ToString()),
@@ -344,11 +382,14 @@ Respond ONLY with valid JSON in the specified format.";
                     Notes = jObject["cookingTips"].ToString()
                 };
 
+                //Logger.Log("ParseAIResponse end");
+
                 return recipe;
             }
             catch (Exception ex)
             {
                 Logger.Error($"Recipe parsing error: {ex.Message}");
+                Logger.Error($"Recipe raw: {aiResponse}");
                 return null;
             }
         }

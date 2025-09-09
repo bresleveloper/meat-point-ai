@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -115,7 +116,7 @@ namespace Meat_Point_AI.App_Data
             }
         }
 
-        private static string ProcessHebrewText(string text)
+        private static string ProcessHebrewTextWithNumbers(string text)
         {
             if (string.IsNullOrEmpty(text)) return text;
 
@@ -123,10 +124,50 @@ namespace Meat_Point_AI.App_Data
             bool containsHebrew = text.Any(c => c >= 0x0590 && c <= 0x05FF);
             if (!containsHebrew) return text; // Return as-is for non-Hebrew text
 
-            // Reverse Hebrew text for proper display in PDF (single line)
-            char[] chars = text.ToCharArray();
+            // Use regex to find all numbers (integers and floats)
+            var numberPattern = @"\b\d+(?:\.\d+)?\b";
+            var matches = Regex.Matches(text, numberPattern);
+            
+            if (matches.Count == 0)
+            {
+                // No numbers found, use original reversal logic
+                char[] charsShminner = text.ToCharArray();
+                Array.Reverse(charsShminner);
+                return new string(charsShminner);
+            }
+
+            // Extract numbers and replace with placeholders
+            var numbers = new List<string>();
+            string textWithPlaceholders = text;
+            
+            // Replace numbers with placeholders (reverse order to maintain indices)
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                var match = matches[i];
+                numbers.Insert(0, match.Value); // Insert at beginning to maintain original order
+                string placeholder = $"~N{i}~"; // Use a simple, symmetric placeholder
+                textWithPlaceholders = textWithPlaceholders.Substring(0, match.Index) + 
+                                     placeholder + 
+                                     textWithPlaceholders.Substring(match.Index + match.Length);
+            }
+
+            // Reverse text with placeholders
+            char[] chars = textWithPlaceholders.ToCharArray();
             Array.Reverse(chars);
-            return new string(chars);
+            string reversedText = new string(chars);
+
+            // Replace placeholders back with original numbers
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                reversedText = reversedText.Replace($"~{i}N~", numbers[i]); // Reversed placeholder pattern
+            }
+
+            return reversedText;
+        }
+
+        private static string ProcessHebrewText(string text)
+        {
+            return ProcessHebrewTextWithNumbers(text);
         }
 
         private static string ProcessHebrewLongText(string text)
@@ -145,10 +186,8 @@ namespace Meat_Point_AI.App_Data
                 {
                     if (!string.IsNullOrEmpty(lines[i]))
                     {
-                        // Reverse only the Hebrew text within each line
-                        char[] charsInner = lines[i].ToCharArray();
-                        Array.Reverse(charsInner);
-                        lines[i] = new string(charsInner);
+                        // Use number-preserving Hebrew text processing for each line
+                        lines[i] = ProcessHebrewTextWithNumbers(lines[i]);
                     }
                 }
                 return string.Join("\n", lines);
@@ -162,11 +201,8 @@ namespace Meat_Point_AI.App_Data
                 {
                     if (!string.IsNullOrEmpty(lines[i]))
                     {
-                        // Reverse only the Hebrew text within each line
-                        lines[i] += ".";
-                        char[] charsInner = lines[i].ToCharArray();
-                        Array.Reverse(charsInner);
-                        lines[i] = new string(charsInner);
+                        // Use number-preserving Hebrew text processing for each line
+                        lines[i] = ProcessHebrewTextWithNumbers(lines[i] + ".");
                     }
                 }
 
@@ -174,10 +210,8 @@ namespace Meat_Point_AI.App_Data
                 return string.Join("\n", lines);
             }
 
-            // Reverse Hebrew text for proper display in PDF (single line)
-            char[] chars = text.ToCharArray();
-            Array.Reverse(chars);
-            return new string(chars);
+            // Use number-preserving Hebrew text processing for single line
+            return ProcessHebrewTextWithNumbers(text);
         }
 
         private static string ProcessHebrewLongText2(string text)
@@ -299,12 +333,12 @@ namespace Meat_Point_AI.App_Data
                     if (!string.IsNullOrEmpty(quantity))
                     {
                         //itemText += quantity + " " + ProcessHebrewText(item.item);
-                        itemText += quantity + " " + item.item;
+                        itemText += quantity + " " + item.item.Replace("(", ")").Replace(")", "(");
                     }
                     else
                     {
                         //itemText += ProcessHebrewText(item.item);
-                        itemText += item.item;
+                        itemText += item.item.Replace("(", ")").Replace(")", "("); ;
                     }
 
                     if (!string.IsNullOrEmpty(item.notes))
