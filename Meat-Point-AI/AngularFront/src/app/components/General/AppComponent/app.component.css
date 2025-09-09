@@ -4,6 +4,13 @@
   position: relative;
 }
 
+.app-header {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
 .app-content {
   position: relative;
   z-index: 1;

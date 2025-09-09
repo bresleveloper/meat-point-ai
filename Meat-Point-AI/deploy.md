@@ -1,28 +1,19 @@
+# How to deploy to freeasphosting.net
+
+1. VS -> rebuild solution
+2. ng -> `ng b --base-href=/dist/` (or run ngb.bat)
+3. create different folder in your cpu for deploy (like `MEAT-MEAL-Deploy`)
+4. copy/override `bin` folder from C#
+5. in deploy folder, create `dist` folder
+6. copy ng files there
+7. cut-n-paste the `index.html` to top folder
+8. if changes were made there (or initial install) copy `global.asax`, `global.asax.cs`, `web.config`. (also connect to your db with ssms and run scripts)
+9. otherwise download copy of webconfig from server. this repo does not include `web.config` to protect keys.
+10. ziv everything from within the deploy folder. NOT the deploy folder itself.
+11. login to `https://freeasphosting.net/`, delete all, upload and unzip.
+12. might need cach cleaning
 
 
+## troubleshooting
 
-  1. API Keys Needed:
-
-  - OpenAI API Key (for recipe generation)
-  - Stripe Keys (for payment processing - optional for demo)
-
-  2. Backend Configuration (.NET API)
-
-  Update Web.config with your settings:
-
-  <appSettings>
-    <!-- Database connection -->
-    <add key="SqlConnectionString" value="Server=localhost;Database=BeefMaster;Trusted_Connection=True;" />
-
-    <!-- API Keys -->
-    <add key="OpenAI_API_Key" value="your-openai-api-key-here" />
-    <add key="Stripe_Secret_Key" value="sk_test_your-stripe-secret-key" />
-    <add key="Stripe_Publishable_Key" value="pk_test_your-stripe-publishable-key" />
-  </appSettings>
-
-
-  3. create DB
-  
-  * create db in sql
-  * run scripts under `Models\scripts`
-
+`Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/html". Strict MIME type checking is enforced for module scripts per HTML spec.` - your index.html has links to JS files that dont exists in the DIST folder. maybe its the wrong html, maybe you missed something, check files names in html and dist.

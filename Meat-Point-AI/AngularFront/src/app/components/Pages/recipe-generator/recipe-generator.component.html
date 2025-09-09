@@ -1,15 +1,15 @@
 <div class="recipe-generator-container">
   <div class="generator-header">
-    <h1>🥩 Meat Point AI - Your AI Private Chef 🍷</h1>
-    <p>Generate personalized beef recipes based on your cooking skills and preferences.</p>
+    <h1>{{ 'RECIPE_GENERATOR.TITLE' | translate }}</h1>
+    <p>{{ 'RECIPE_GENERATOR.DESCRIPTION' | translate }}</p>
     
     <!-- User usage status -->
     <div *ngIf="userUsage" class="usage-status">
       <div class="usage-info" [class.premium]="userUsage.PlanStatus === 'Premium'">
         <span class="plan-badge">{{ userUsage.PlanStatus }}</span>
-        <span class="usage-count">{{ userUsage.RemainingRecipes }} recipes remaining today</span>
+        <span class="usage-count">{{ userUsage.RemainingRecipes }} {{ 'RECIPE_GENERATOR.RECIPES_REMAINING' | translate }}</span>
         <button *ngIf="userUsage.PlanStatus === 'Free'" class="upgrade-btn" (click)="goToUpgrade()">
-          ⭐ Upgrade to Premium
+          {{ 'RECIPE_GENERATOR.UPGRADE_PREMIUM' | translate }}
         </button>
       </div>
     </div>
@@ -25,11 +25,11 @@
 
   <!-- Recipe Configuration Form -->
   <div class="recipe-form-container">
-    <h3>🍽️ Recipe Configuration</h3>
+    <h3>{{ 'RECIPE_GENERATOR.FORM_TITLE' | translate }}</h3>
     
     <div class="form-row">
       <div class="form-group">
-        <label for="numberOfDiners">Number of Diners</label>
+        <label for="numberOfDiners">{{ 'RECIPE_GENERATOR.NUMBER_OF_DINERS' | translate }}</label>
         <input 
           type="number" 
           id="numberOfDiners"
@@ -41,13 +41,13 @@
       </div>
 
       <div class="form-group">
-        <label for="dinerAges">Age Groups</label>
+        <label for="dinerAges">{{ 'RECIPE_GENERATOR.AGE_GROUPS' | translate }}</label>
         <select 
           id="dinerAges"
           [(ngModel)]="recipeRequest.DinerAges"
           class="form-input"
         >
-          <option value="">Select age groups</option>
+          <option value="">{{ 'RECIPE_GENERATOR.SELECT_AGE_GROUPS' | translate }}</option>
           <option *ngFor="let option of dinerAgeOptions" [value]="option.value">
             {{ option.label }}
           </option>
@@ -57,22 +57,22 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="cookingMethod">Cooking Method</label>
+        <label for="cookingMethod">{{ 'RECIPE_GENERATOR.COOKING_METHOD' | translate }}</label>
         <select 
           id="cookingMethod"
           [(ngModel)]="recipeRequest.CookingMethod"
           class="form-input"
           required
         >
-          <option value="">Choose cooking method</option>
-          <option *ngFor="let method of cookingMethods" [value]="method">
-            {{ method }}
+          <option value="">{{ 'RECIPE_GENERATOR.CHOOSE_COOKING_METHOD' | translate }}</option>
+          <option *ngFor="let method of cookingMethods" [value]="method.value">
+            {{ method.label }}
           </option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="cookingTime">Cooking Time</label>
+        <label for="cookingTime">{{ 'RECIPE_GENERATOR.COOKING_TIME' | translate }}</label>
         <select 
           id="cookingTime"
           [(ngModel)]="recipeRequest.CookingTimeMinutes"
@@ -86,30 +86,30 @@
     </div>
 
     <div class="form-group">
-      <label for="dietaryRestrictions">Dietary Preferences (Optional)</label>
+      <label for="dietaryRestrictions">{{ 'RECIPE_GENERATOR.DIETARY_PREFERENCES' | translate }}</label>
       <select 
         id="dietaryRestrictions"
         [(ngModel)]="recipeRequest.DietaryRestrictions"
         class="form-input"
       >
-        <option value="">No specific dietary restrictions</option>
-        <option *ngFor="let option of dietaryOptions" [value]="option">
-          {{ option }}
+        <option value="">{{ 'RECIPE_GENERATOR.NO_DIETARY_RESTRICTIONS' | translate }}</option>
+        <option *ngFor="let option of dietaryOptions" [value]="option.value">
+          {{ option.label }}
         </option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="userPrompt">Special Requests (Optional)</label>
+      <label for="userPrompt">{{ 'RECIPE_GENERATOR.SPECIAL_REQUESTS' | translate }}</label>
       <textarea 
         id="userPrompt"
         [(ngModel)]="recipeRequest.UserPrompt"
-        placeholder="e.g., 'Make it spicy', 'Use Mediterranean flavors', 'Include garlic and herbs'"
+        [placeholder]="'RECIPE_GENERATOR.SPECIAL_REQUESTS_PLACEHOLDER' | translate"
         class="form-input textarea-input"
         rows="3"
       ></textarea>
       <small class="input-help">
-        Tell the AI chef any specific flavors, ingredients, or cooking style you prefer
+        {{ 'RECIPE_GENERATOR.SPECIAL_REQUESTS_HELP' | translate }}
       </small>
     </div>
 
@@ -125,54 +125,54 @@
         [disabled]="!canGenerate()"
         (click)="onGenerate()"
       >
-        <span *ngIf="!isGenerating">🤖 Generate My Recipe!</span>
+        <span *ngIf="!isGenerating">{{ 'RECIPE_GENERATOR.GENERATE_BUTTON' | translate }}</span>
         <span *ngIf="isGenerating">
           <div class="spinner"></div>
-          Cooking up your recipe...
+          {{ 'RECIPE_GENERATOR.GENERATING' | translate }}
         </span>
       </button>
 
       <div *ngIf="!userUsage?.CanGenerateMore && userUsage" class="limit-message">
-        <p>You've reached your daily limit. <a href="#" (click)="goToUpgrade()">Upgrade to Premium</a> for 30 recipes per day!</p>
+        <p>{{ 'RECIPE_GENERATOR.DAILY_LIMIT_REACHED' | translate }} <a href="#" (click)="goToUpgrade()">{{ 'RECIPE_GENERATOR.UPGRADE_LINK' | translate }}</a> for 30 recipes per day!</p>
       </div>
 
       <div *ngIf="!canGenerate() && userUsage?.CanGenerateMore" class="form-validation">
-        <p>Please select a cooking method to generate your recipe.</p>
+        <p>{{ 'RECIPE_GENERATOR.SELECT_COOKING_METHOD_MSG' | translate }}</p>
       </div>
     </div>
   </div>
 
     <!-- AI Cut Selection Info -->
   <div class="recipe-form-container">
-    <h3>🤖 Smart AI Cut Selection</h3>
+    <h3>{{ 'RECIPE_GENERATOR.AI_CUT_SELECTION_TITLE' | translate }}</h3>
     <p style="color: var(--text-secondary); text-align: center; margin: 0; line-height: 1.6;">
-      Our AI Chef will automatically suggest the perfect beef cut based on your cooking preferences!<br>
-      <small><em>Short cooking time = tender cuts • Long cooking time = tougher cuts perfect for braising</em></small>
+      {{ 'RECIPE_GENERATOR.AI_CUT_SELECTION_DESCRIPTION' | translate }}<br>
+      <small><em>{{ 'RECIPE_GENERATOR.AI_CUT_SELECTION_NOTE' | translate }}</em></small>
     </p>
   </div>
 
   <!-- Recipe preview -->
   <div *ngIf="recipeRequest.CookingMethod" class="recipe-preview">
-    <h4>📋 Recipe Preview</h4>
+    <h4>{{ 'RECIPE_GENERATOR.PREVIEW_TITLE' | translate }}</h4>
     <div class="preview-content">
       <div class="preview-item">
-        <strong>Beef Cut:</strong> <em>AI Chef will suggest the perfect cut!</em>
+        <strong>{{ 'RECIPE_GENERATOR.BEEF_CUT' | translate }}</strong> <em>{{ 'RECIPE_GENERATOR.AI_SUGGEST' | translate }}</em>
       </div>
       <div class="preview-item">
-        <strong>Skill Level:</strong> 
+        <strong>{{ 'RECIPE_GENERATOR.SKILL_LEVEL' | translate }}</strong> 
         <span class="complexity-indicator">
           {{ recipeRequest.ComplexityLevel }}/5 
           <span *ngFor="let i of [1,2,3,4,5]" [class]="i <= recipeRequest.ComplexityLevel ? 'star-filled' : 'star-empty'">★</span>
         </span>
       </div>
       <div class="preview-item">
-        <strong>Serves:</strong> {{ recipeRequest.NumberOfDiners }} people
+        <strong>{{ 'RECIPE_GENERATOR.SERVES' | translate }}</strong> <span>{{ recipeRequest.NumberOfDiners }} {{ 'RECIPE_GENERATOR.SERVES_VALUE' | translate }}</span>
       </div>
       <div class="preview-item">
-        <strong>Method:</strong> {{ recipeRequest.CookingMethod }}
+        <strong>{{ 'RECIPE_GENERATOR.METHOD' | translate }}</strong> {{ recipeRequest.CookingMethod }}
       </div>
       <div class="preview-item">
-        <strong>Time:</strong> {{ recipeRequest.CookingTimeMinutes }} minutes
+        <strong>{{ 'RECIPE_GENERATOR.TIME' | translate }}</strong> <span>{{ recipeRequest.CookingTimeMinutes }} {{ 'RECIPE_GENERATOR.TIME_VALUE' | translate }}</span>
       </div>
     </div>
   </div>

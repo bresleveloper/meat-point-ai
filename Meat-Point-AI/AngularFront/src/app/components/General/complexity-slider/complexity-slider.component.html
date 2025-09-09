@@ -1,6 +1,6 @@
 <div class="complexity-slider-container">
   <div class="slider-header">
-    <h3>Cooking Skill Level</h3>
+    <h3>{{ 'COMPLEXITY_SLIDER.COOKING_SKILL_LEVEL' | translate }}</h3>
     <div class="current-level">
       <span class="level-label">{{ getCurrentLevel().label }}</span>
       <span class="level-description">{{ getCurrentLevel().description }}</span>
@@ -33,7 +33,7 @@
 
   <div class="difficulty-indicators">
     <div class="indicator-row">
-      <span class="indicator-label">Recipe Complexity:</span>
+      <span class="indicator-label">{{ 'COMPLEXITY_SLIDER.RECIPE_COMPLEXITY' | translate }}</span>
       <div class="difficulty-dots">
         <div 
           *ngFor="let i of [1,2,3,4,5]" 
@@ -45,19 +45,19 @@
     
     <div class="skill-hints">
       <div *ngIf="value === 1" class="hint">
-        Simple seasonings, foolproof cooking methods, hard to mess up
+        {{ 'COMPLEXITY_SLIDER.HINT_1' | translate }}
       </div>
       <div *ngIf="value === 2" class="hint">
-        Basic techniques, forgiving cuts, simple flavor profiles
+        {{ 'COMPLEXITY_SLIDER.HINT_2' | translate }}
       </div>
       <div *ngIf="value === 3" class="hint">
-        Moderate techniques, timing matters, good flavor development
+        {{ 'COMPLEXITY_SLIDER.HINT_3' | translate }}
       </div>
       <div *ngIf="value === 4" class="hint">
-        Advanced skills required, precise timing, complex flavors
+        {{ 'COMPLEXITY_SLIDER.HINT_4' | translate }}
       </div>
       <div *ngIf="value === 5" class="hint">
-        Expert techniques, perfect timing, restaurant-quality results
+        {{ 'COMPLEXITY_SLIDER.HINT_5' | translate }}
       </div>
     </div>
   </div>

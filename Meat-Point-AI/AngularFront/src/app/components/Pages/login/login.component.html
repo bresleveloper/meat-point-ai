@@ -2,20 +2,20 @@
   <!-- Auth checking state -->
   <div *ngIf="isCheckingAuth" class="auth-loading-state">
     <div class="loading-spinner"></div>
-    <p>Checking authentication...</p>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
   </div>
 
   <div *ngIf="!isCheckingAuth" class="login-card">
     <div class="beef-header">
-      <h1 class="app-title">🥩 MEAT POINT AI</h1>
-      <p class="app-subtitle">Master the art of cooking beef</p>
+      <h1 class="app-title" i18n="@@app.title">🥩 MEAT POINT AI</h1>
+      <p class="app-subtitle" i18n="@@app.subtitle">Master the art of cooking beef</p>
     </div>
 
     <form (ngSubmit)="onLogin()" class="login-form">
-      <h2>Sign In</h2>
+      <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
       
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
         <input 
           type="email" 
           id="email" 
@@ -28,7 +28,7 @@
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{ 'LOGIN.PASSWORD' | translate }}</label>
         <input 
           type="password" 
           id="password" 
@@ -49,24 +49,24 @@
         class="login-btn"
         [disabled]="isLoading"
       >
-        <span *ngIf="!isLoading">Sign In</span>
-        <span *ngIf="isLoading">Signing In...</span>
+        <span *ngIf="!isLoading">{{ 'LOGIN.SUBMIT' | translate }}</span>
+        <span *ngIf="isLoading">{{ 'COMMON.LOADING' | translate }}</span>
       </button>
 
       <div class="register-link">
-        Don't have an account? 
-        <a (click)="goToRegister()" style="cursor: pointer;">Create one here</a>
+        <span>{{ 'LOGIN.NO_ACCOUNT' | translate }}</span> 
+        <a (click)="goToRegister()" style="cursor: pointer;">{{ 'LOGIN.REGISTER_LINK' | translate }}</a>
       </div>
     </form>
 
     <div class="features-preview">
-      <h3>What you'll get:</h3>
+      <h3 i18n="@@login.featuresTitle">What you'll get:</h3>
       <ul>
-        <li>🥩 Learn about different beef cuts</li>
-        <li>👨‍🍳 Recipes from "Stupid Dad" to "Super Chef Mom" level</li>
-        <li>🤖 AI-powered recipe generation</li>
-        <li>📝 Printable grocery lists and cooking instructions</li>
-        <li>⭐ 3 free recipes daily, or 30 with Premium ($10/month)</li>
+        <li i18n="@@login.feature1">🥩 Learn about different beef cuts</li>
+        <li i18n="@@login.feature2">👨‍🍳 Recipes from "Stupid Dad" to "Super Chef Mom" level</li>
+        <li i18n="@@login.feature3">🤖 AI-powered recipe generation</li>
+        <li i18n="@@login.feature4">📝 Printable grocery lists and cooking instructions</li>
+        <li i18n="@@login.feature5">⭐ 3 free recipes daily, or 30 with Premium ($10/month)</li>
       </ul>
     </div>
   </div>

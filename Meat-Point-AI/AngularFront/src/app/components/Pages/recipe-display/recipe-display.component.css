@@ -453,8 +453,8 @@
 }
 
 .shopping-checkbox {
-  margin-right: 1rem;
-  transform: scale(1.2);
+  margin-right: 0.5rem;
+  transform: scale(1.0);
   accent-color: #8B4513;
 }
 

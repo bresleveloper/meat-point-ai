@@ -1,10 +1,15 @@
 
 <div class="app-container">
+  <!-- Language Switcher Header -->
+  <div class="app-header">
+    <app-language-switcher></app-language-switcher>
+  </div>
+
   <!-- App initialization loading -->
   <div *ngIf="isInitializing" class="app-loading-state">
     <div class="loading-spinner"></div>
-    <h2>🥩 MEAT POINT AI</h2>
-    <p>Initializing...</p>
+    <h2 i18n="@@app.title">🥩 MEAT POINT AI</h2>
+    <p i18n="@@app.initializing">Initializing...</p>
   </div>
   
   <!-- Main app content -->
