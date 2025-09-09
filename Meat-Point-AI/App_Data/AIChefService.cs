@@ -26,6 +26,7 @@ namespace Meat_Point_AI.App_Data
             public int CookingTimeMinutes { get; set; }
             public string DietaryRestrictions { get; set; }
             public string UserPrompt { get; set; }
+            public string Language { get; set; }
         }
 
         public class RecipeGenerationResponse
@@ -57,8 +58,8 @@ namespace Meat_Point_AI.App_Data
 
                 // No specific beef cut - AI will suggest appropriate cut
 
-                // Build the AI prompt
-                string systemPrompt = BuildSystemPrompt();
+                // Build the AI prompt with language support
+                string systemPrompt = BuildSystemPrompt(request.Language ?? "en");
                 string userPrompt = BuildUserPrompt(request);
 
                 // Call OpenAI API
@@ -119,9 +120,23 @@ namespace Meat_Point_AI.App_Data
             }
         }
 
-        private static string BuildSystemPrompt()
+        private static string BuildSystemPrompt(string language = "en")
         {
-            return @"You are an expert beef chef specializing in teaching people how to cook different cuts of beef. 
+            // Language mapping for OpenAI
+            var languageNames = new Dictionary<string, string>
+            {
+                { "en", "English" },
+                { "es", "Spanish" },
+                { "fr", "French" },
+                { "he", "Hebrew" }
+            };
+
+            string targetLanguage = languageNames.ContainsKey(language) ? languageNames[language] : "English";
+            string languageInstruction = targetLanguage != "English" 
+                ? $"IMPORTANT: Respond entirely in {targetLanguage}. Generate all recipe content including title, description, ingredients, instructions, cooking tips, and temperature guide in {targetLanguage}. "
+                : "";
+
+            return $@"{languageInstruction}You are an expert beef chef specializing in teaching people how to cook different cuts of beef. 
 You create recipes that are very tasteful and matched to the cook's skill level. Your recipes focus ONLY on beef cuts from cows.
 
 CRITICAL QUANTITY REQUIREMENTS:
@@ -143,14 +158,14 @@ MEASUREMENT STANDARDS:
 - Seasonings: ""2 tsp salt"", ""1 tbsp black pepper"", ""1 tsp garlic powder""
 
 IMPORTANT: You must respond with a valid JSON object in this exact format:
-{
+{{
   ""title"": ""Recipe name"",
   ""description"": ""Brief description"",
   ""ingredients"": [
-    {""item"": ""ribeye steaks"", ""quantity"": ""2 lbs (1-inch thick)"", ""category"": ""Meat""},
-    {""item"": ""yellow onion"", ""quantity"": ""1 large"", ""category"": ""Vegetables""},
-    {""item"": ""garlic"", ""quantity"": ""3 cloves"", ""category"": ""Vegetables""},
-    {""item"": ""olive oil"", ""quantity"": ""2 tbsp"", ""category"": ""Pantry""}
+    {{""item"": ""ribeye steaks"", ""quantity"": ""2 lbs (1-inch thick)"", ""category"": ""Meat""}},
+    {{""item"": ""yellow onion"", ""quantity"": ""1 large"", ""category"": ""Vegetables""}},
+    {{""item"": ""garlic"", ""quantity"": ""3 cloves"", ""category"": ""Vegetables""}},
+    {{""item"": ""olive oil"", ""quantity"": ""2 tbsp"", ""category"": ""Pantry""}}
   ],
   ""instructions"": [
     ""Step 1 instruction"",
@@ -158,11 +173,11 @@ IMPORTANT: You must respond with a valid JSON object in this exact format:
   ],
   ""temperatureGuide"": ""Internal temperatures and doneness levels"",
   ""shoppingList"": [
-    {""item"": ""ribeye steaks"", ""category"": ""Meat"", ""notes"": ""Ask for 1-inch thick cuts""},
-    {""item"": ""yellow onion"", ""category"": ""Vegetables"", ""notes"": ""Choose large, firm onion""}
+    {{""item"": ""ribeye steaks"", ""category"": ""Meat"", ""notes"": ""Ask for 1-inch thick cuts""}},
+    {{""item"": ""yellow onion"", ""category"": ""Vegetables"", ""notes"": ""Choose large, firm onion""}}
   ],
   ""cookingTips"": ""Add 1 deep insight about the specific cut""
-}
+}}
 
 VALIDATION RULES:
 - Every ingredient MUST have a specific quantity (not ""some"", ""a little"", or ""to taste"")
@@ -174,6 +189,22 @@ Make recipes that emphasize the taste of the specific beef cut.";
 
         private static string BuildUserPrompt(RecipeGenerationRequest request)
         {
+            // Language instruction for user prompt
+            string languageInstruction = "";
+            if (!string.IsNullOrEmpty(request.Language) && request.Language != "en")
+            {
+                var languageNames = new Dictionary<string, string>
+                {
+                    { "es", "Spanish" },
+                    { "fr", "French" }, 
+                    { "he", "Hebrew" }
+                };
+                
+                if (languageNames.ContainsKey(request.Language))
+                {
+                    languageInstruction = $"CRITICAL: Generate the entire recipe response in {languageNames[request.Language]}. All text including ingredients, instructions, descriptions, and tips must be in {languageNames[request.Language]}. ";
+                }
+            }
             var complexityDescriptions = new Dictionary<int, string>
             {
                 {1, "\"Stupid Dad\" level - Very simple, hard to mess up, minimal technique required"},
@@ -192,7 +223,7 @@ Make recipes that emphasize the taste of the specific beef cut.";
                 }
             }
 
-            return $@"Create a beef recipe with these requirements:
+            return $@"{languageInstruction}Create a beef recipe with these requirements:
 
 COOKING PREFERENCES:
 - Cooking method: {request.CookingMethod}

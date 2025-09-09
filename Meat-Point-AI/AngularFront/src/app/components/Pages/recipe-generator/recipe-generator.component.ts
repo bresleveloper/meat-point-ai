@@ -125,6 +125,9 @@ export class RecipeGeneratorComponent implements OnInit {
     this.isGenerating = true;
     this.errorMessage = '';
 
+    // Add current language to the request
+    this.recipeRequest.Language = this.translate.currentLang;
+
     this.aiService.generateRecipe(this.recipeRequest).subscribe({
       next: (response) => {
         this.isGenerating = false;

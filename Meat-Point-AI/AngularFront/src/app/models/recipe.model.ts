@@ -40,6 +40,7 @@ export interface RecipeGenerationRequest {
   CookingTimeMinutes: number;
   DietaryRestrictions?: string;
   UserPrompt?: string;
+  Language?: string;
 }
 
 export interface RecipeGenerationResponse {

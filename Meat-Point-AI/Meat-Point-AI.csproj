@@ -182,6 +182,7 @@
   <ItemGroup>
     <Compile Include="App_Data\AIChefService.cs" />
     <Compile Include="App_Data\AuthService.cs" />
+    <Compile Include="App_Data\HebrewPDFService.cs" />
     <Compile Include="App_Data\JwtAuthorizeAttribute.cs" />
     <Compile Include="App_Data\JwtService.cs" />
     <Compile Include="App_Data\Logger.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\HebrewPDFController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PDFController.cs" />
     <Compile Include="Controllers\SimpleController.cs" />

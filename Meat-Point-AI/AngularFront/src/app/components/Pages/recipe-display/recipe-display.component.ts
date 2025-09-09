@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 import { Recipe, RecipeIngredient, ShoppingListItem } from '../../../models/recipe.model';
 import { AuthService } from '../../../services/auth.service';
 import { RecipeService } from '../../../services/simple-service.service';
@@ -17,6 +18,7 @@ export class RecipeDisplayComponent implements OnInit {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private recipeService = inject(RecipeService);
+  private translate = inject(TranslateService);
 
   recipe?: Recipe;
   ingredients: RecipeIngredient[] = [];
@@ -182,7 +184,10 @@ export class RecipeDisplayComponent implements OnInit {
   printPDF(): void {
     if (!this.recipe) return;
 
-    const pdfUrl = `${environment.serverApiUrl}/pdf/generate/${this.recipe.RecipeID}`;
+    // Determine which PDF service to use based on current language
+    const isHebrew = this.translate.currentLang === 'he';
+    const pdfEndpoint = isHebrew ? 'hebrewpdf' : 'pdf';
+    const pdfUrl = `${environment.serverApiUrl}/${pdfEndpoint}/generate/${this.recipe.RecipeID}`;
     const headers = this.authService.getAuthorizationHeader();
 
     this.http.get(pdfUrl, { 
@@ -194,7 +199,9 @@ export class RecipeDisplayComponent implements OnInit {
         const blobUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = blobUrl;
-        link.download = `BeefMaster-${this.recipe!.Title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+        const filePrefix = isHebrew ? 'BeefMaster-Hebrew' : 'BeefMaster';
+        //link.download = `${filePrefix}-${this.recipe!.Title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+        link.download = `${filePrefix}-${this.recipe!.Title.replace(/[^a-zA-Z0-9א-ת]/g, '-')}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

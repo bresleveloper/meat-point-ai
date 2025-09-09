@@ -18,6 +18,24 @@ export class LanguageSwitcherComponent implements OnInit {
   isDropdownOpen = false;
   currentLanguage: string = 'en';
 
+  private detectBrowserLanguage(): string {
+    const browserLang = navigator.language || 'en';
+    const supportedLanguages = ['en', 'es', 'fr', 'he'];
+    
+    // Map browser language codes to supported languages
+    const langMappings: { [key: string]: string } = {
+      'en': 'en', 'en-US': 'en', 'en-GB': 'en', 'en-AU': 'en', 'en-CA': 'en',
+      'es': 'es', 'es-ES': 'es', 'es-MX': 'es', 'es-AR': 'es', 'es-CL': 'es', 'es-CO': 'es',
+      'fr': 'fr', 'fr-FR': 'fr', 'fr-CA': 'fr', 'fr-BE': 'fr', 'fr-CH': 'fr',
+      'he': 'he', 'he-IL': 'he', 'iw': 'he', 'iw-IL': 'he'
+    };
+    
+    // First try exact match, then try language part only (e.g., 'en-US' -> 'en')
+    return langMappings[browserLang] || 
+           langMappings[browserLang.split('-')[0]] || 
+           'en';
+  }
+
   constructor(private translateService: TranslateService) {
     // Set available languages
     this.translateService.addLangs(['en', 'es', 'fr', 'he']);
@@ -25,16 +43,23 @@ export class LanguageSwitcherComponent implements OnInit {
     // Set default language
     this.translateService.setDefaultLang('en');
     
-    // Get saved language from localStorage or use default
-    const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
-    // Ensure the saved language is supported
-    if (['en', 'es', 'fr', 'he'].includes(savedLanguage)) {
-      this.currentLanguage = savedLanguage;
-      this.translateService.use(savedLanguage);
-    } else {
-      this.currentLanguage = 'en';
-      this.translateService.use('en');
+    // Determine initial language with priority: localStorage → browser → default
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    const browserLanguage = this.detectBrowserLanguage();
+    const supportedLanguages = ['en', 'es', 'fr', 'he'];
+    
+    let initialLanguage = 'en'; // default fallback
+    
+    if (savedLanguage && supportedLanguages.includes(savedLanguage)) {
+      // Priority 1: Use saved language preference
+      initialLanguage = savedLanguage;
+    } else if (browserLanguage && supportedLanguages.includes(browserLanguage)) {
+      // Priority 2: Use browser detected language
+      initialLanguage = browserLanguage;
     }
+    
+    this.currentLanguage = initialLanguage;
+    this.translateService.use(initialLanguage);
   }
 
   ngOnInit() {
