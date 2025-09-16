@@ -31,3 +31,19 @@ renaming all the C# stuff got help with [this stack thread](https://stackoverflo
 * [FreeAspNetHosting](https://somee.com/FreeAspNetHosting.aspx)
 * [monsterasp.net](https://www.monsterasp.net/)
 
+
+
+## more todo
+
+#### connect payments!!
+
+#### add designs
+
+* https://htmlcodex.com/demo/?item=2315
+* https://htmlcodex.com/demo/?item=2384
+* https://htmlcodex.com/demo/?item=874
+* https://themewagon.github.io/restoran/
+* https://themewagon.github.io/videograph/contact.html
+* https://themewagon.github.io/nickelfox
+* https://themewagon.github.io/restaurantly/
+* https://themewagon.github.io/edu-meeting/
