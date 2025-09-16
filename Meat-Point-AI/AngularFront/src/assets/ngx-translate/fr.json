@@ -7,7 +7,8 @@
   },
   "APP": {
     "TITLE": "🥩 MEAT POINT AI",
-    "SUBTITLE": "Maîtrisez l'art de cuisiner le bœuf"
+    "SUBTITLE": "Maîtrisez l'art de cuisiner le bœuf",
+    "INITIALIZING": "Initialisation..."
   },
   "NAVIGATION": {
     "HOME": "Accueil",
@@ -40,7 +41,9 @@
     "CONFIRM_PASSWORD": "Confirmer le Mot de Passe",
     "SUBMIT": "Créer un Compte",
     "HAVE_ACCOUNT": "Vous avez déjà un compte ?",
-    "LOGIN_LINK": "Connectez-vous ici"
+    "LOGIN_LINK": "Connectez-vous ici",
+    "PASSWORD_HELP": "Au moins 6 caractères",
+    "FREE_PLAN_TITLE": "Commencez avec notre Plan Gratuit :"
   },
   "RECIPE_GENERATOR": {
     "TITLE": "🥩 Meat Point AI - Votre Chef Privé IA 🍷",
@@ -127,11 +130,14 @@
     "SERVINGS": "Portions"
   },
   "UPGRADE": {
-    "TITLE": "Mettre à Niveau Votre Plan",
+    "TITLE": "🥩 MEAT POINT AI Premium",
+    "SUBTITLE": "Débloquez un potentiel illimité pour cuisiner le bœuf",
+    "LOADING": "Chargement des informations d'abonnement...",
+    "BACK_BUTTON": "← Retour aux Recettes",
     "CURRENT_PLAN": "Plan Actuel",
     "UPGRADE_NOW": "Mettre à Niveau Maintenant",
-    "FREE_PLAN": "Plan Gratuit",
-    "PREMIUM_PLAN": "Plan Premium",
+    "FREE_PLAN": "🆓 Gratuit",
+    "PREMIUM_PLAN": "⭐ Premium - 10$/mois",
     "FEATURES": "Fonctionnalités",
     "PRICE": "Prix",
     "FREE_FEATURES": {

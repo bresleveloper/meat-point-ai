@@ -17,7 +17,8 @@ namespace Meat_Point_AI
 
             // Enable CORS
             // if no frontUrl then wildcard. for dev make FrontUrL to "http://localhost:4200
-            var cors = new EnableCorsAttribute(string.IsNullOrEmpty(frontUrl) ? frontUrl : "*", "*", "*");
+            //var cors = new EnableCorsAttribute(string.IsNullOrEmpty(frontUrl) ? frontUrl : "*", "*", "*");
+            var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
 
             // Web API routes

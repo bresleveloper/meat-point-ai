@@ -7,8 +7,8 @@
 
   <div *ngIf="!isCheckingAuth" class="login-card">
     <div class="beef-header">
-      <h1 class="app-title" i18n="@@app.title">🥩 MEAT POINT AI</h1>
-      <p class="app-subtitle" i18n="@@app.subtitle">Master the art of cooking beef</p>
+      <h1 class="app-title">{{ 'APP.TITLE' | translate }}</h1>
+      <p class="app-subtitle">{{ 'APP.SUBTITLE' | translate }}</p>
     </div>
 
     <form (ngSubmit)="onLogin()" class="login-form">
@@ -60,13 +60,13 @@
     </form>
 
     <div class="features-preview">
-      <h3 i18n="@@login.featuresTitle">What you'll get:</h3>
+      <h3>{{ 'LOGIN.FEATURES_TITLE' | translate }}</h3>
       <ul>
-        <li i18n="@@login.feature1">🥩 Learn about different beef cuts</li>
-        <li i18n="@@login.feature2">👨‍🍳 Recipes from "Stupid Dad" to "Super Chef Mom" level</li>
-        <li i18n="@@login.feature3">🤖 AI-powered recipe generation</li>
-        <li i18n="@@login.feature4">📝 Printable grocery lists and cooking instructions</li>
-        <li i18n="@@login.feature5">⭐ 3 free recipes daily, or 30 with Premium ($10/month)</li>
+        <li>{{ 'LOGIN.FEATURE_1' | translate }}</li>
+        <li>{{ 'LOGIN.FEATURE_2' | translate }}</li>
+        <li>{{ 'LOGIN.FEATURE_3' | translate }}</li>
+        <li>{{ 'LOGIN.FEATURE_4' | translate }}</li>
+        <li>{{ 'LOGIN.FEATURE_5' | translate }}</li>
       </ul>
     </div>
   </div>

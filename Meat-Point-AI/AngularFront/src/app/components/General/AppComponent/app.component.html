@@ -8,8 +8,8 @@
   <!-- App initialization loading -->
   <div *ngIf="isInitializing" class="app-loading-state">
     <div class="loading-spinner"></div>
-    <h2 i18n="@@app.title">🥩 MEAT POINT AI</h2>
-    <p i18n="@@app.initializing">Initializing...</p>
+    <h2>{{ 'APP.TITLE' | translate }}</h2>
+    <p>{{ 'APP.INITIALIZING' | translate }}</p>
   </div>
   
   <!-- Main app content -->

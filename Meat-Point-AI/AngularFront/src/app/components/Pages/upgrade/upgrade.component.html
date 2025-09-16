@@ -2,7 +2,7 @@
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-state">
     <div class="loading-spinner"></div>
-    <p i18n="@@upgrade.loading">Loading subscription information...</p>
+    <p>{{ 'UPGRADE.LOADING' | translate }}</p>
   </div>
 
   <!-- Main Content -->
@@ -10,9 +10,9 @@
     
     <!-- Header -->
     <div class="upgrade-header">
-      <button class="back-btn" (click)="goBack()" i18n="@@upgrade.backButton">← Back to Recipes</button>
-      <h1 i18n="@@upgrade.title">🥩 MEAT POINT AI Premium</h1>
-      <p i18n="@@upgrade.subtitle">Unlock unlimited beef cooking potential</p>
+      <button class="back-btn" (click)="goBack()">{{ 'UPGRADE.BACK_BUTTON' | translate }}</button>
+      <h1>{{ 'UPGRADE.TITLE' | translate }}</h1>
+      <p>{{ 'UPGRADE.SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Current Subscription Status -->
@@ -23,7 +23,7 @@
         [class.free]="subscriptionStatus.PlanStatus === 'Free'"
       >
         <div class="status-header">
-          <h3 i18n="@@upgrade.currentPlan">Current Plan: {{ subscriptionStatus.PlanStatus }}</h3>
+          <h3>{{ 'UPGRADE.CURRENT_PLAN' | translate }}: {{ subscriptionStatus.PlanStatus }}</h3>
           <div class="status-badge" [class.premium]="subscriptionStatus.PlanStatus === 'Premium'">
             {{ subscriptionStatus.PlanStatus === 'Premium' ? '⭐ PREMIUM' : '🆓 FREE' }}
           </div>

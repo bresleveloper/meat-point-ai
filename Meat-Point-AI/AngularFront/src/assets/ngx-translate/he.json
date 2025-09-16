@@ -7,7 +7,8 @@
   },
   "APP": {
     "TITLE": "🥩 MEAT POINT AI",
-    "SUBTITLE": "לשלוט באמנות הבישול של בשר בקר"
+    "SUBTITLE": "לשלוט באמנות הבישול של בשר בקר",
+    "INITIALIZING": "מאתחל..."
   },
   "NAVIGATION": {
     "HOME": "בית",
@@ -40,7 +41,9 @@
     "CONFIRM_PASSWORD": "אישור סיסמה",
     "SUBMIT": "צור חשבון",
     "HAVE_ACCOUNT": "יש לך כבר חשבון?",
-    "LOGIN_LINK": "התחבר כאן"
+    "LOGIN_LINK": "התחבר כאן",
+    "PASSWORD_HELP": "לפחות 6 תווים",
+    "FREE_PLAN_TITLE": "התחל עם תוכנית החינם שלנו:"
   },
   "RECIPE_GENERATOR": {
     "TITLE": "🥩 Meat Point AI - השף הפרטי שלך עם בינה מלאכותית 🍷",
@@ -127,11 +130,14 @@
     "SERVINGS": "מנות"
   },
   "UPGRADE": {
-    "TITLE": "שדרג את התוכנית שלך",
+    "TITLE": "🥩 MEAT POINT AI פרימיום",
+    "SUBTITLE": "שחרר פוטנציאל בישול בשר בקר בלתי מוגבל",
+    "LOADING": "טוען מידע מנוי...",
+    "BACK_BUTTON": "← חזרה למתכונים",
     "CURRENT_PLAN": "תוכנית נוכחית",
     "UPGRADE_NOW": "שדרג עכשיו",
-    "FREE_PLAN": "תוכנית חינם",
-    "PREMIUM_PLAN": "תוכנית פרימיום",
+    "FREE_PLAN": "🆓 חינם",
+    "PREMIUM_PLAN": "⭐ פרימיום - 10$/חודש",
     "FEATURES": "תכונות",
     "PRICE": "מחיר",
     "FREE_FEATURES": {

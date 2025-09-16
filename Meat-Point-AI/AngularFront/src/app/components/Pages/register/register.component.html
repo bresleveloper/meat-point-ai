@@ -60,7 +60,7 @@
           required
           class="form-input"
         />
-        <small class="input-help" i18n="@@register.passwordHelp">At least 6 characters</small>
+        <small class="input-help">{{ 'REGISTER.PASSWORD_HELP' | translate }}</small>
       </div>
 
       <div class="form-group">
@@ -96,24 +96,24 @@
     </form>
 
     <div class="plan-info">
-      <h3 i18n="@@register.freePlanTitle">Start with our Free Plan:</h3>
+      <h3>{{ 'REGISTER.FREE_PLAN_TITLE' | translate }}</h3>
       <div class="plan-features">
         <div class="free-plan">
-          <h4 i18n="@@plans.free.title">🆓 Free</h4>
+          <h4>{{ 'UPGRADE.FREE_PLAN' | translate }}</h4>
           <ul>
-            <li i18n="@@plans.free.feature1">3 AI recipes per day</li>
-            <li i18n="@@plans.free.feature2">All beef cut education</li>
-            <li i18n="@@plans.free.feature3">Basic recipe generation</li>
-            <li i18n="@@plans.free.feature4">PDF recipe exports</li>
+            <li>{{ 'UPGRADE.FREE_FEATURES.RECIPES_PER_DAY' | translate }}</li>
+            <li>{{ 'UPGRADE.FREE_FEATURES.BASIC_CUTS' | translate }}</li>
+            <li>{{ 'UPGRADE.FREE_FEATURES.STANDARD_RECIPES' | translate }}</li>
+            <li>{{ 'UPGRADE.PREMIUM_FEATURES.PDF_EXPORT' | translate }}</li>
           </ul>
         </div>
         <div class="premium-plan">
-          <h4 i18n="@@plans.premium.title">⭐ Premium - $10/month</h4>
+          <h4>{{ 'UPGRADE.PREMIUM_PLAN' | translate }}</h4>
           <ul>
-            <li i18n="@@plans.premium.feature1">30 AI recipes per day</li>
-            <li i18n="@@plans.premium.feature2">Priority recipe generation</li>
-            <li i18n="@@plans.premium.feature3">Advanced customization</li>
-            <li i18n="@@plans.premium.feature4">Meal planning features</li>
+            <li>{{ 'UPGRADE.PREMIUM_FEATURES.RECIPES_PER_DAY' | translate }}</li>
+            <li>{{ 'UPGRADE.PREMIUM_FEATURES.PRIORITY_SUPPORT' | translate }}</li>
+            <li>{{ 'UPGRADE.PREMIUM_FEATURES.ADVANCED_RECIPES' | translate }}</li>
+            <li>Meal planning features</li>
           </ul>
         </div>
       </div>
